@@ -7,30 +7,30 @@ $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java'
 
 // ФИО
 if (empty($_POST['fio'])) {
-    $errors['fio'] = 'Заполните ФИО.';
+    $errors['fio'] = 'Заполните поле ФИО.';
 } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
-    $errors['fio'] = 'ФИО должно содержать только буквы и пробелы.';
+    $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
 } elseif (mb_strlen($_POST['fio']) > 200) {
-    $errors['fio'] = 'ФИО должно быть не длиннее 150 символов.';
+    $errors['fio'] = 'ФИО должно быть не длиннее 200 символов.';
 }
 
 // Телефон
 if (empty($_POST['phone'])) {
-    $errors['phone'] = 'Заполните телефон.';
-} elseif (!preg_match('/^\+?\d{10,15}$/', $_POST['phone'])) {
-    $errors['phone'] = 'Телефон должен содержать до 20 цифр.';
+    $errors['phone'] = 'Заполните поле телефон.';
+} elseif (!preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
+    $errors['phone'] = 'Телефон должен состоять из 10-20 цифр.';
 }
 
 // Email
 if (empty($_POST['email'])) {
-    $errors['email'] = 'Заполните email.';
+    $errors['email'] = 'Заполните поле email.';
 } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = 'Введите корректный email.';
 }
 
 // Дата рождения
 if (empty($_POST['birthdate'])) {
-    $errors['birthdate'] = 'Заполните дату рождения.';
+    $errors['birthdate'] = 'Заполните поле даты рождения.';
 } else {
     $birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
     $today = new DateTime();
@@ -62,7 +62,7 @@ if (empty($_POST['languages'])) {
 
 // Биография
 if (empty($_POST['bio'])) {
-    $errors['bio'] = 'Заполните биографию.';
+    $errors['bio'] = 'Заполните поле биографии.';
 } elseif (strlen($_POST['bio']) > 5000) {
     $errors['bio'] = 'Биография должна быть не длиннее 5000 символов.';
 }
