@@ -10,7 +10,7 @@ if (empty($_POST['fio'])) {
     $errors['fio'] = 'Заполните ФИО.';
 } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
     $errors['fio'] = 'ФИО должно содержать только буквы и пробелы.';
-} elseif (mb_strlen($_POST['fio']) > 150) {
+} elseif (mb_strlen($_POST['fio']) > 200) {
     $errors['fio'] = 'ФИО должно быть не длиннее 150 символов.';
 }
 
@@ -18,7 +18,7 @@ if (empty($_POST['fio'])) {
 if (empty($_POST['phone'])) {
     $errors['phone'] = 'Заполните телефон.';
 } elseif (!preg_match('/^\+?\d{10,15}$/', $_POST['phone'])) {
-    $errors['phone'] = 'Телефон должен содержать от 10 до 15 цифр.';
+    $errors['phone'] = 'Телефон должен содержать до 20 цифр.';
 }
 
 // Email
