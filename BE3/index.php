@@ -73,7 +73,7 @@ if (empty($_POST['contract'])) {
 }
 
 if (!empty($errors)) {
-    include('form.html');
+    include('index.html');
     exit();
 }
 
