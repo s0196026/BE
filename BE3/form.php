@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!empty($_GET['save'])) {
         print('Сохранено');
     }
-    include('index.php');
+    include('process.php');
     exit();
 }
 /*
@@ -18,11 +18,11 @@ header('Content-Type: text/html; charset=UTF-8');
 
 // Обрабатываем и GET, и POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include('index.php');  // обработка данных
+    include('process.php');  // обработка данных
 } elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!empty($_GET['save'])) {
         print('Спасибо, результаты сохранены.');
     }
-    include('index.php');  // показ формы
+    include('process.php');  // показ формы
 }
 */
