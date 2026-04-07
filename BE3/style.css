@@ -6,9 +6,12 @@ body {
     background-color: #ffe9b0;
 }
 
+form{
+    background-color: #fcdea8;
+}
+
 .form-group {
     margin-bottom: 15px;
-    background-color: #ec9311;
 }
 
 label {
