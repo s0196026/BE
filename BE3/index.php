@@ -107,12 +107,18 @@ try {
     // Получаем ID последней вставленной записи
     $applicationId = $db->lastInsertId();
 
+    // Сначала получаем соответствие названий языков и ID
+    $langStmt = $db->prepare("SELECT id FROM programming_languages WHERE name = :name");
     // Вставка языков программирования
-    $stmt = $db->prepare("INSERT INTO application_languages (application_id, language) VALUES (:app_id, :lang)");
+    $stmt = $db->prepare("INSERT INTO application_languages (application_id, language_id) VALUES (:app_id, :lang_id)");
     foreach ($_POST['languages'] as $lang) {
+        // Получаем ID языка
+        $langStmt->execute([':name' => $lang]);
+        $langId = $langStmt->fetchColumn();
+    
         $stmt->execute([
             ':app_id' => $applicationId,
-            ':lang' => $lang
+            ':lang_id' => $langId
         ]);
     }
 
