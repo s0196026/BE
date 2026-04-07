@@ -42,8 +42,12 @@ textarea {
 }
 
 .radio-group, .checkbox-group {
-    display: inline-block;
     margin: 5px 0;
+}
+
+.form-group .radio-group {
+    display: inline-block;
+    margin-right: 20px;
 }
 
 .error {
