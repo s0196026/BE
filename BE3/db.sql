@@ -1,8 +1,8 @@
 -- Таблица заявок
 CREATE TABLE applications (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    fio VARCHAR(150) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
+    fio VARCHAR(200) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
     email VARCHAR(100) NOT NULL,
     birthdate DATE NOT NULL,
     gender ENUM('male', 'female') NOT NULL,
