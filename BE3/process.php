@@ -10,7 +10,7 @@ if (empty($_POST['fio'])) {
     $errors['fio'] = 'Заполните поле ФИО.';
 } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
     $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
-} elseif (mb_strlen($_POST['fio']) > 200) {
+} elseif (strlen($_POST['fio']) > 200) {
     $errors['fio'] = 'ФИО должно быть не длиннее 200 символов.';
 }
 
