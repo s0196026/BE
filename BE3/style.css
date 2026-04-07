@@ -42,6 +42,7 @@ textarea {
 }
 
 .radio-group, .checkbox-group {
+    display: inline-block;
     margin: 5px 0;
 }
 
