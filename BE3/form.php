@@ -1,3 +1,4 @@
+/*
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -10,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     include('process.php');
     exit();
 }
-/*
+    */
+
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -23,6 +25,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($_GET['save'])) {
         print('Спасибо, результаты сохранены.');
     }
-    include('process.php');  // показ формы
+    include('index.php');  // показ формы
 }
-*/
