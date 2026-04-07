@@ -43,7 +43,7 @@ textarea {
 
 .radio-group, .checkbox-group {
     margin: 5px 0;
-    float: right;
+    float: left;
 }
 
 .error {
