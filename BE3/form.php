@@ -1,10 +1,4 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['save'])) {
-    // Проверяем, не было ли сообщение уже показано
-    // Для этого используем session или просто редиректим
-    header('Location: /BE/BE3/');
-    exit();
-}
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: text/html; charset=UTF-8');
