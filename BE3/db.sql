@@ -1,4 +1,4 @@
--- Таблица заявок
+-- заявки
 CREATE TABLE applications (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     fio VARCHAR(200) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE applications (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Таблица языков программирования (справочник)
+-- яп
 CREATE TABLE programming_languages (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
@@ -20,13 +20,13 @@ CREATE TABLE programming_languages (
     UNIQUE KEY (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Заполнение справочника языков
+-- список яп
 INSERT INTO programming_languages (name) VALUES 
 ('Pascal'), ('C'), ('C++'), ('JavaScript'), ('PHP'), 
 ('Python'), ('Java'), ('Haskel'), ('Clojure'), ('Prolog'), 
 ('Scala'), ('Go');
 
--- Таблица связи заявок и языков (один ко многим)
+-- заявки + яп
 CREATE TABLE application_languages (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     application_id INT UNSIGNED NOT NULL,
