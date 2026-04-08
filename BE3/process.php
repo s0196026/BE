@@ -43,7 +43,7 @@ if (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAI
 }*/
 
 // Дата рождения
-if(!empty($_POST['birthdate']){
+if(!empty($_POST['birthdate'])){
    $birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
     $today = new DateTime();
     $minAge = new DateTime('-150 years');
