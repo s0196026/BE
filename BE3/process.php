@@ -23,7 +23,7 @@ if (!empty($_POST['fio'])){
 }*/
 
 // Телефон
-if (!preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
+if (!empty($_POST['phone']) && !preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
     $errors['phone'] = 'Телефон должен состоять из 10-20 цифр.';
 }
 /*if (empty($_POST['phone'])) {
