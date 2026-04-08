@@ -33,7 +33,7 @@ if (!empty($_POST['phone']) && !preg_match('/^\+?\d{10,20}$/', $_POST['phone']))
 }*/
 
 // Email
-if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+if (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = 'Введите корректный email.';
 }
 /*if (empty($_POST['email'])) {
@@ -46,7 +46,7 @@ if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 $birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
 $today = new DateTime();
 $minAge = new DateTime('-150 years');
-if (!$birthdate || $birthdate > $today || $birthdate < $minAge) {
+if (!empty($_POST['birthdate']) && (!$birthdate || $birthdate > $today || $birthdate < $minAge)) {
     $errors['birthdate'] = 'Введите корректную дату рождения.';
 }
 /*if (empty($_POST['birthdate'])) {
@@ -62,7 +62,7 @@ if (!$birthdate || $birthdate > $today || $birthdate < $minAge) {
 }*/
 
 // Пол
-if (!in_array($_POST['gender'], ['male', 'female'])) {
+if (!empty($_POST['gender']) && !in_array($_POST['gender'], ['male', 'female'])) {
     $errors['gender'] = 'Выбран недопустимый пол.';
 }
 /*if (empty($_POST['gender'])) {
@@ -72,7 +72,7 @@ if (!in_array($_POST['gender'], ['male', 'female'])) {
 }*/
 
 // Языки программирования
-foreach ($_POST['languages'] as $lang) {
+foreach (!empty($_POST['languages']) && ($_POST['languages'] as $lang)) {
     if (!in_array($lang, $allowedLanguages)) {
         $errors['languages'] = 'Выбран недопустимый язык программирования.';
         break;
@@ -90,7 +90,7 @@ foreach ($_POST['languages'] as $lang) {
 }*/
 
 // Биография
-if (strlen($_POST['bio']) > 5000) {
+if (!empty($_POST['bio']) && strlen($_POST['bio']) > 5000) {
     $errors['bio'] = 'Биография должна быть не длиннее 5000 символов.';
 }
 /*if (empty($_POST['bio'])) {
