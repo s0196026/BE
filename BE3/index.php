@@ -102,6 +102,7 @@
             <div class="success-message">
                 Спасибо за заполнение формы!
             </div>
+            <meta http-equiv="refresh" content="4; URL=/BE/BE3/">
         <?php endif; ?>
 
     </form>
