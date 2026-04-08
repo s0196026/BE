@@ -11,6 +11,16 @@ h1 {
     text-align: center;
 }
 
+.success-message{
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #EC9311;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+}
+
 form{
     color: #4e1609;
     background-color: #fcdea8;
