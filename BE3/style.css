@@ -2,14 +2,14 @@ body {
     //font-family: Arial, sans-serif;
     max-width: 700px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     background-color: #ffe9b0;
     color: #4e1609;
 }
 
 h1 {
     text-align: center;
-    margin: 10px;
+    //margin: 10px;
 }
 
 .success-message{
