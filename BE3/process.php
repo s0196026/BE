@@ -74,10 +74,12 @@ if (!empty($_POST['gender']) && !in_array($_POST['gender'], ['male', 'female']))
 }*/
 
 // Языки программирования
-foreach (!empty($_POST['languages']) && $_POST['languages'] as $lang) {
-    if (!in_array($lang, $allowedLanguages)) {
-        $errors['languages'] = 'Выбран недопустимый язык программирования.';
-        break;
+if(!empty($_POST['languages'])){
+    foreach ($_POST['languages'] as $lang) {
+        if (!in_array($lang, $allowedLanguages)) {
+            $errors['languages'] = 'Выбран недопустимый язык программирования.';
+            break;
+        }
     }
 }
 /*if (empty($_POST['languages'])) {
