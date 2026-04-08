@@ -12,6 +12,7 @@
         <div class="form-group">
             <label for="fio">ФИО:</label>
             <input type="text" id="fio" name="fio" required>
+            <div id="fio-error" class="error" style="color: red; font-size: 14px;"></div>
             <?php if (isset($errors['fio'])): ?>
                 <div class="error"><?= $errors['fio'] ?></div>
             <?php endif; ?>
