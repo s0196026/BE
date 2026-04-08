@@ -2,7 +2,7 @@
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['save'])) {
     // Проверяем, не было ли сообщение уже показано
     // Для этого используем session или просто редиректим
-    header('Location: /BE3/');
+    header('Location: /BE/BE3/');
     exit();
 }
 error_reporting(E_ALL);
