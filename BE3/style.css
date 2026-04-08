@@ -7,6 +7,10 @@ body {
     color: #4e1609;
 }
 
+h1{
+    text-align: center;
+}
+
 form{
     color: #4e1609;
     background-color: #fcdea8;
