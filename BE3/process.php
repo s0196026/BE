@@ -6,30 +6,46 @@ $errors = [];
 $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
 // ФИО
-if (empty($_POST['fio'])) {
+if (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
+    $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
+} elseif (strlen($_POST['fio']) > 200) {
+    $errors['fio'] = 'ФИО должно быть не длиннее 200 символов.';
+/*if (empty($_POST['fio'])) {
     $errors['fio'] = 'Заполните поле ФИО.';
 } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
     $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
 } elseif (strlen($_POST['fio']) > 200) {
     $errors['fio'] = 'ФИО должно быть не длиннее 200 символов.';
-}
+}*/
 
 // Телефон
-if (empty($_POST['phone'])) {
+if (!preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
+    $errors['phone'] = 'Телефон должен состоять из 10-20 цифр.';
+}
+/*if (empty($_POST['phone'])) {
     $errors['phone'] = 'Заполните поле телефон.';
 } elseif (!preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
     $errors['phone'] = 'Телефон должен состоять из 10-20 цифр.';
-}
+}*/
 
 // Email
-if (empty($_POST['email'])) {
+if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    $errors['email'] = 'Введите корректный email.';
+}
+/*if (empty($_POST['email'])) {
     $errors['email'] = 'Заполните поле email.';
 } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = 'Введите корректный email.';
-}
+}*/
 
 // Дата рождения
-if (empty($_POST['birthdate'])) {
+$birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
+$today = new DateTime();
+$minAge = new DateTime('-150 years');
+if (!$birthdate || $birthdate > $today || $birthdate < $minAge) {
+    $errors['birthdate'] = 'Введите корректную дату рождения.';
+}
+/*if (empty($_POST['birthdate'])) {
     $errors['birthdate'] = 'Заполните поле даты рождения.';
 } else {
     $birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
@@ -39,17 +55,26 @@ if (empty($_POST['birthdate'])) {
     if (!$birthdate || $birthdate > $today || $birthdate < $minAge) {
         $errors['birthdate'] = 'Введите корректную дату рождения.';
     }
-}
+}*/
 
 // Пол
-if (empty($_POST['gender'])) {
+if (!in_array($_POST['gender'], ['male', 'female'])) {
+    $errors['gender'] = 'Выбран недопустимый пол.';
+}
+/*if (empty($_POST['gender'])) {
     $errors['gender'] = 'Укажите пол.';
 } elseif (!in_array($_POST['gender'], ['male', 'female'])) {
     $errors['gender'] = 'Выбран недопустимый пол.';
-}
+}*/
 
 // Языки программирования
-if (empty($_POST['languages'])) {
+foreach ($_POST['languages'] as $lang) {
+    if (!in_array($lang, $allowedLanguages)) {
+        $errors['languages'] = 'Выбран недопустимый язык программирования.';
+        break;
+    }
+}
+/*if (empty($_POST['languages'])) {
     $errors['languages'] = 'Выберите хотя бы один язык программирования.';
 } else {
     foreach ($_POST['languages'] as $lang) {
@@ -58,14 +83,17 @@ if (empty($_POST['languages'])) {
             break;
         }
     }
-}
+}*/
 
 // Биография
-if (empty($_POST['bio'])) {
+if (strlen($_POST['bio']) > 5000) {
+    $errors['bio'] = 'Биография должна быть не длиннее 5000 символов.';
+}
+/*if (empty($_POST['bio'])) {
     $errors['bio'] = 'Заполните поле биографии.';
 } elseif (strlen($_POST['bio']) > 5000) {
     $errors['bio'] = 'Биография должна быть не длиннее 5000 символов.';
-}
+}*/
 
 // Контракт
 if (empty($_POST['contract'])) {
