@@ -1,11 +1,10 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-// Валидация данных
 $errors = [];
 $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
-// ФИО
+//фио
 if (!empty($_POST['fio'])){
     if (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
         $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
@@ -14,35 +13,17 @@ if (!empty($_POST['fio'])){
     }
 }
 
-/*if (empty($_POST['fio'])) {
-    $errors['fio'] = 'Заполните поле ФИО.';
-} elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
-    $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
-} elseif (strlen($_POST['fio']) > 150) {
-    $errors['fio'] = 'ФИО должно быть не длиннее 150 символов.';
-}*/
-
-// Телефон
+//телефон
 if (!empty($_POST['phone']) && !preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
     $errors['phone'] = 'Телефон должен состоять из 10-20 цифр.';
 }
-/*if (empty($_POST['phone'])) {
-    $errors['phone'] = 'Заполните поле телефон.';
-} elseif (!preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
-    $errors['phone'] = 'Телефон должен состоять из 10-20 цифр.';
-}*/
 
-// Email
+//email
 if (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = 'Введите корректный email.';
 }
-/*if (empty($_POST['email'])) {
-    $errors['email'] = 'Заполните поле email.';
-} elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-    $errors['email'] = 'Введите корректный email.';
-}*/
 
-// Дата рождения
+//др
 if(!empty($_POST['birthdate'])){
    $birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
     $today = new DateTime();
@@ -51,29 +32,13 @@ if(!empty($_POST['birthdate'])){
         $errors['birthdate'] = 'Введите корректную дату рождения.';
     }
 }
-/*if (empty($_POST['birthdate'])) {
-    $errors['birthdate'] = 'Заполните поле даты рождения.';
-} else {
-    $birthdate = DateTime::createFromFormat('Y-m-d', $_POST['birthdate']);
-    $today = new DateTime();
-    $minAge = new DateTime('-150 years');
-    
-    if (!$birthdate || $birthdate > $today || $birthdate < $minAge) {
-        $errors['birthdate'] = 'Введите корректную дату рождения.';
-    }
-}*/
 
-// Пол
+//пол
 if (!empty($_POST['gender']) && !in_array($_POST['gender'], ['male', 'female'])) {
     $errors['gender'] = 'Выбран недопустимый пол.';
 }
-/*if (empty($_POST['gender'])) {
-    $errors['gender'] = 'Укажите пол.';
-} elseif (!in_array($_POST['gender'], ['male', 'female'])) {
-    $errors['gender'] = 'Выбран недопустимый пол.';
-}*/
 
-// Языки программирования
+//яп
 if(!empty($_POST['languages'])){
     foreach ($_POST['languages'] as $lang) {
         if (!in_array($lang, $allowedLanguages)) {
@@ -82,28 +47,13 @@ if(!empty($_POST['languages'])){
         }
     }
 }
-/*if (empty($_POST['languages'])) {
-    $errors['languages'] = 'Выберите хотя бы один язык программирования.';
-} else {
-    foreach ($_POST['languages'] as $lang) {
-        if (!in_array($lang, $allowedLanguages)) {
-            $errors['languages'] = 'Выбран недопустимый язык программирования.';
-            break;
-        }
-    }
-}*/
 
-// Биография
+//био
 if (!empty($_POST['bio']) && strlen($_POST['bio']) > 5000) {
     $errors['bio'] = 'Биография должна быть не длиннее 5000 символов.';
 }
-/*if (empty($_POST['bio'])) {
-    $errors['bio'] = 'Заполните поле биографии.';
-} elseif (strlen($_POST['bio']) > 5000) {
-    $errors['bio'] = 'Биография должна быть не длиннее 5000 символов.';
-}*/
 
-// Контракт
+//чекбокс
 if (empty($_POST['contract'])) {
     $errors['contract'] = 'Необходимо ознакомиться с контрактом.';
 }
@@ -113,10 +63,10 @@ if (!empty($errors)) {
     exit();
 }
 
-// Подключение к базе данных
-$user = 'u82388'; // Заменить на ваш логин
-$pass = '5768002'; // Заменить на ваш пароль
-$dbname = 'u82388'; // Заменить на ваш логин (имя БД)
+//бд
+$user = 'u82388';
+$pass = '5768002';
+$dbname = 'u82388';
 
 try {
     $db = new PDO("mysql:host=localhost;dbname=$dbname", $user, $pass, [
@@ -124,10 +74,8 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    // Начало транзакции
     $db->beginTransaction();
 
-    // Вставка основной информации
     $stmt = $db->prepare("INSERT INTO applications (fio, phone, email, birthdate, gender, bio, contract_agreed) 
                           VALUES (:fio, :phone, :email, :birthdate, :gender, :bio, :contract)");
     $stmt->execute([
@@ -140,32 +88,24 @@ try {
         ':contract' => isset($_POST['contract']) ? 1 : 0
     ]);
 
-    // Получаем ID последней вставленной записи
     $applicationId = $db->lastInsertId();
 
-    // Сначала получаем соответствие названий языков и ID
     $langStmt = $db->prepare("SELECT id FROM programming_languages WHERE name = :name");
-    // Вставка языков программирования
     $stmt = $db->prepare("INSERT INTO application_languages (application_id, language_id) VALUES (:app_id, :lang_id)");
     foreach ($_POST['languages'] as $lang) {
-        // Получаем ID языка
         $langStmt->execute([':name' => $lang]);
         $langId = $langStmt->fetchColumn();
-    
         $stmt->execute([
             ':app_id' => $applicationId,
             ':lang_id' => $langId
         ]);
     }
 
-    // Завершение транзакции
     $db->commit();
 
-    // Перенаправление с сообщением об успехе
     header('Location: form.php?save=1');
     exit();
 } catch (PDOException $e) {
-    // Откат транзакции в случае ошибки
     if (isset($db) && $db->inTransaction()) {
         $db->rollBack();
     }
