@@ -6,14 +6,21 @@ $errors = [];
 $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
 // ФИО
+if (!empty($_POST['fio'])){
+    if (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
+        $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
+    } elseif (strlen($_POST['fio']) > 150) {
+        $errors['fio'] = 'ФИО должно быть не длиннее 150 символов.';
+    }
+}
 
-if (empty($_POST['fio'])) {
+/*if (empty($_POST['fio'])) {
     $errors['fio'] = 'Заполните поле ФИО.';
 } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
     $errors['fio'] = 'ФИО должно состоять только из букв и пробелов.';
-} elseif (strlen($_POST['fio']) > 200) {
-    $errors['fio'] = 'ФИО должно быть не длиннее 200 символов.';
-}
+} elseif (strlen($_POST['fio']) > 150) {
+    $errors['fio'] = 'ФИО должно быть не длиннее 150 символов.';
+}*/
 
 // Телефон
 if (!preg_match('/^\+?\d{10,20}$/', $_POST['phone'])) {
