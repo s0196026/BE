@@ -97,13 +97,13 @@
         </div>
 
         <button type="submit">Сохранить</button>
-        <button type="submit">Сохранить</button>
         
         <?php if (isset($showSuccess) && $showSuccess): ?>
             <div class="success-message">
                 Спасибо за заполнение формы!
             </div>
         <?php endif; ?>
+
     </form>
 </body>
 </html>
