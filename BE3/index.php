@@ -101,7 +101,7 @@
         
         <?php if (isset($showSuccess) && $showSuccess): ?>
             <div class="success-message">
-                Спасибо, результаты сохранены.
+                Спасибо за заполнение формы!
             </div>
         <?php endif; ?>
     </form>
