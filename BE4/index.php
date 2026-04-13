@@ -277,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="checkbox" id="contract" name="contract" value="1"
                        <?= getFormData('contract') ? 'checked' : '' ?>
                        class="<?= isset($_COOKIE['error_contract']) ? 'error-field' : '' ?>">
-                <label for="contract">С контрактом ознакомлен</label>
+                <label for="contract">С контрактом ознакомлен(-а)</label>
             </div>
             <?php if (isset($_COOKIE['error_contract'])): ?>
                 <div class="error"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
@@ -287,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit">Сохранить</button>
 
         <?php if (isset($_GET['success'])): ?>
-            <div class="success-message">Спасибо за заполнение анкеты! Ваш ID: <?= htmlspecialchars($_GET['id']) ?></div>
+            <div class="success-message">Спасибо за заполнение анкеты!</div>
             <meta http-equiv="refresh" content="4; URL=/BE/BE4/">
         <?php endif; ?>
         <?php if (isset($_COOKIE['error_db'])): ?>
