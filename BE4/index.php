@@ -179,12 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <h1>Анкета</h1>
-    <?php if (isset($_GET['success'])): ?>
-        <div class="success">Спасибо, результаты сохранены. ID: <?= htmlspecialchars($_GET['id']) ?></div>
-    <?php endif; ?>
-    <?php if (isset($_COOKIE['error_db'])): ?>
-        <div class="error"><?= htmlspecialchars($_COOKIE['error_db']) ?></div>
-    <?php endif; ?>
+    
     <form action="index.php" method="POST">
         <!-- ФИО -->
         <div class="form-group">
@@ -290,6 +285,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 
         <button type="submit">Сохранить</button>
+
+        <?php if (isset($_GET['success'])): ?>
+            <div class="success">Спасибо за заполнение анкеты! ID: <?= htmlspecialchars($_GET['id']) ?></div>
+            <meta http-equiv="refresh" content="4; URL=/BE/BE4/">
+        <?php endif; ?>
+        <?php if (isset($_COOKIE['error_db'])): ?>
+            <div class="error"><?= htmlspecialchars($_COOKIE['error_db']) ?></div>
+        <?php endif; ?>
     </form>
 </body>
 </html>
