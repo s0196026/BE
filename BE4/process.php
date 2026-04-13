@@ -117,9 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Подключение к БД
-    $user = 'u68775';
-    $pass = '7631071';
-    $dbname = 'u68775';
+    $user = 'u82388';
+    $pass = '5768002';
+    $dbname = 'u82388';
     try {
         $db = new PDO("mysql:host=localhost;dbname=$dbname", $user, $pass, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $db->rollBack();
         }
         setErrorCookie('db', 'Ошибка сохранения: '.$e->getMessage());
-        header('Location: index.php');
+        header('Location: process.php');
         exit();
     }
 }
