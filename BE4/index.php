@@ -287,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit">Сохранить</button>
 
         <?php if (isset($_GET['success'])): ?>
-            <div class="success-message">Спасибо за заполнение анкеты! ID: <?= htmlspecialchars($_GET['id']) ?></div>
+            <div class="success-message">Спасибо за заполнение анкеты! Ваш ID: <?= htmlspecialchars($_GET['id']) ?></div>
             <meta http-equiv="refresh" content="4; URL=/BE/BE4/">
         <?php endif; ?>
         <?php if (isset($_COOKIE['error_db'])): ?>
