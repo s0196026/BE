@@ -10,17 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['clear'])) {
             setcookie($name, '', time() - 3600, '/');
         }
     }
-    header('Location: index.php'); // Редирект без параметров
+    header('Location: process.php'); // Редирект без параметров
     exit();
 }
 
 // Обработка POST-запроса (отправка формы)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    require_once 'index.php'; // Подключаем логику валидации и БД
+    require_once 'process.php'; // Подключаем логику валидации и БД
     exit();
 }
 
 // Редирект на index.php, если это не POST и не очистка
-header('Location: index.php');
+header('Location: process.php');
 exit();
 ?>
