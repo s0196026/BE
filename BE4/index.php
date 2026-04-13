@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- ФИО -->
         <div class="form-group">
             <label for="fio">ФИО:</label>
-            <input type="text" id="fio" name="fio" value="<?= htmlspecialchars(getFormData('fio')) ?> required"
+            <input type="text" id="fio" name="fio" required value="<?= htmlspecialchars(getFormData('fio')) ?>"
                    class="<?= isset($_COOKIE['error_fio']) ? 'error-field' : '' ?>">
             <?php if (isset($_COOKIE['error_fio'])): ?>
                 <div class="error"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Телефон -->
         <div class="form-group">
             <label for="phone">Телефон:</label>
-            <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars(getFormData('phone')) ?> required"
+            <input type="tel" id="phone" name="phone" required value="<?= htmlspecialchars(getFormData('phone')) ?>"
                    class="<?= isset($_COOKIE['error_phone']) ? 'error-field' : '' ?>">
             <?php if (isset($_COOKIE['error_phone'])): ?>
                 <div class="error"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
