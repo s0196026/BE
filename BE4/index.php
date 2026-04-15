@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-// Функции для работы с cookies
 function getFormData($field) {
     return $_COOKIE["form_$field"] ?? '';
 }
@@ -14,12 +13,10 @@ function setErrorCookie($name, $message) {
     setcookie("error_$name", $message, 0, '/');
 }
 
-// Обработка POST-запроса (отправка формы)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
     $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
-    // Валидация ФИО
     if (empty($_POST['fio'])) {
         $errors['fio'] = 'Заполните ФИО.';
         setErrorCookie('fio', $errors['fio']);
@@ -30,9 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['fio'] = 'Не более 150 символов';
         setErrorCookie('fio', $errors['fio']);
     }
-    setFormCookie('fio', $_POST['fio']); // <-- Сохраняем всегда
+    setFormCookie('fio', $_POST['fio']); 
 
-    // Валидация телефона
     if (empty($_POST['phone'])) {
         $errors['phone'] = 'Заполните телефон.';
         setErrorCookie('phone', $errors['phone']);
@@ -40,9 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['phone'] = 'От 10 до 15 цифр, можно начинать с +';
         setErrorCookie('phone', $errors['phone']);
     }
-    setFormCookie('phone', $_POST['phone']); // <-- Сохраняем всегда
+    setFormCookie('phone', $_POST['phone']); 
 
-    // Валидация email
     if (empty($_POST['email'])) {
         $errors['email'] = 'Заполните email.';
         setErrorCookie('email', $errors['email']);
@@ -50,9 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['email'] = 'Некорректный email';
         setErrorCookie('email', $errors['email']);
     }
-    setFormCookie('email', $_POST['email']); // <-- Сохраняем всегда
+    setFormCookie('email', $_POST['email']); 
 
-    // Валидация даты рождения
     if (empty($_POST['birthdate'])) {
         $errors['birthdate'] = 'Укажите дату рождения';
         setErrorCookie('birthdate', $errors['birthdate']);
@@ -65,9 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             setErrorCookie('birthdate', $errors['birthdate']);
         }
     }
-    setFormCookie('birthdate', $_POST['birthdate']); // <-- Сохраняем всегда
+    setFormCookie('birthdate', $_POST['birthdate']);
 
-    // Валидация пола
     if (empty($_POST['gender'])) {
         $errors['gender'] = 'Укажите пол';
         setErrorCookie('gender', $errors['gender']);
@@ -75,9 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['gender'] = 'Выберите из списка';
         setErrorCookie('gender', $errors['gender']);
     }
-    setFormCookie('gender', $_POST['gender']); // <-- Сохраняем всегда
+    setFormCookie('gender', $_POST['gender']);
 
-    // Валидация языков программирования
     if (empty($_POST['languages'])) {
         $errors['languages'] = 'Выберите хотя бы один язык';
         setErrorCookie('languages', $errors['languages']);
@@ -89,10 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
             }
         }
-        setFormCookie('languages', implode(',', $_POST['languages'])); // <-- Сохраняем всегда
+        setFormCookie('languages', implode(',', $_POST['languages'])); 
     }
 
-    // Валидация биографии
     if (empty($_POST['bio'])) {
         $errors['bio'] = 'Заполните биографию';
         setErrorCookie('bio', $errors['bio']);
@@ -100,23 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['bio'] = 'Не более 5000 символов';
         setErrorCookie('bio', $errors['bio']);
     }
-    setFormCookie('bio', $_POST['bio']); // <-- Сохраняем всегда
-
-    // Валидация чекбокса
+    setFormCookie('bio', $_POST['bio']); 
+    
     if (empty($_POST['contract'])) {
         $errors['contract'] = 'Необходимо согласие';
         setErrorCookie('contract', $errors['contract']);
     } else {
-        setFormCookie('contract', '1'); // <-- Сохраняем всегда
+        setFormCookie('contract', '1'); 
     }
 
-    // Если есть ошибки — перенаправляем обратно
     if (!empty($errors)) {
         header('Location: index.php');
         exit();
     }
 
-    // Подключение к БД
     $user = 'u82388';
     $pass = '5768002';
     $dbname = 'u82388';
@@ -126,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
         $db->beginTransaction();
 
-        // Сохранение основной информации
         $stmt = $db->prepare("INSERT INTO applications (fio, phone, email, birthdate, gender, bio, contract_agreed)
                               VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
@@ -140,7 +127,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
         $applicationId = $db->lastInsertId();
 
-        // Сохранение языков
         $stmt = $db->prepare("INSERT INTO application_languages (application_id, language_id)
                               SELECT ?, id FROM programming_languages WHERE name = ?");
         foreach ($_POST['languages'] as $lang) {
@@ -149,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $db->commit();
 
-        // Очищаем cookies с данными формы и ошибками
         foreach ($_COOKIE as $name => $value) {
             if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
                 setcookie($name, '', time() - 3600, '/');
@@ -181,7 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <h1>Анкета</h1>
     
     <form action="index.php" method="POST">
-        <!-- ФИО -->
         <div class="form-group">
             <label for="fio">ФИО:</label>
             <input type="text" id="fio" name="fio" value="<?= htmlspecialchars(getFormData('fio')) ?>"
@@ -191,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Телефон -->
         <div class="form-group">
             <label for="phone">Телефон:</label>
             <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars(getFormData('phone')) ?>"
@@ -201,7 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Email -->
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<?= htmlspecialchars(getFormData('email')) ?>"
@@ -211,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Дата рождения -->
         <div class="form-group">
             <label for="birthdate">Дата рождения:</label>
             <input type="date" id="birthdate" name="birthdate" value="<?= htmlspecialchars(getFormData('birthdate')) ?>"
@@ -221,7 +202,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Пол -->
         <div class="form-group">
             <label>Пол:</label>
             <div class="radio-group">
@@ -241,7 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Языки программирования -->
         <div class="form-group">
             <label for="languages">Любимый язык программирования:</label>
             <select id="languages" name="languages[]" multiple="multiple"
@@ -261,7 +240,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Биография -->
         <div class="form-group">
             <label for="bio">Биография:</label>
             <textarea id="bio" name="bio"
@@ -271,7 +249,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <!-- Чекбокс -->
         <div class="form-group">
             <div class="checkbox-group">
                 <input type="checkbox" id="contract" name="contract" value="1"
