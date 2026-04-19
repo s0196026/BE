@@ -205,10 +205,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     color: #4e1609;
 }
 
-h1 {
-    text-align: center;
-}
-
 .success-message{
     color: white;
     font: 16pt bold;
@@ -280,12 +276,19 @@ button {
 button:hover {
     background-color: #9cd8cc;
 }
+header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
 .logout-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background-color: #EC9311;
-    color: white;
             color: white;
             padding: 8px 16px;
             border-radius: 4px;
