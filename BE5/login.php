@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             //font-family: Arial, sans-serif;
             background-color: #ffe9b0;
             margin: 0;
-color: #4e1609;
+color: #64400f;
             padding: 20px;
             display: flex;
             justify-content: center;
