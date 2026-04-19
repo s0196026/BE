@@ -123,7 +123,7 @@ color: #4e1609;
             background-color: #9cd8cc;
         }
         .error {
-            border: 2px solid red
+            border: 2px solid red;
             color: red;
             margin: 15px 0;
             padding: 10px;
