@@ -135,7 +135,7 @@ color: #4e1609;
             margin-top: 20px;
         }
         .register-link a {
-            color: #1976d2;
+            color: #413d51;
             text-decoration: none;
         }
         .register-link a:hover {
