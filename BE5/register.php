@@ -2,13 +2,9 @@
 session_start();
 
 // Подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=db_be5", 'u82388', '57680025', [
+$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-
-/*$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);*/
 
 $error = null;
 $success = false;
