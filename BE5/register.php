@@ -63,11 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+color: #64400f;
+
+            //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffe9b0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -75,16 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin: 0;
         }
         .register-container {
-            background: white;
+            color: #4e1609;
+    background-color: #fcdea8;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
             width: 100%;
             max-width: 400px;
         }
         h2 {
             text-align: center;
-            color: #4361ee;
+            color: #64400f;
             margin-bottom: 1.5rem;
         }
         .form-group {
@@ -92,8 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: bold;
         }
         input {
             width: 100%;
@@ -105,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button {
             width: 100%;
             padding: 0.75rem;
-            background-color: #4361ee;
+            background-color: #EC9311;
             color: white;
             border: none;
             border-radius: 4px;
@@ -114,21 +115,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-top: 1rem;
         }
         button:hover {
-            background-color: #3a56d4;
+            background-color: #9cd8cc;
         }
         .error {
-            color: #f72585;
+            border: 2px solid red;
+            border-radius: 4px;
             margin: 1rem 0;
             padding: 0.75rem;
-            background-color: rgba(247, 37, 133, 0.1);
-            border-radius: 4px;
         }
         .login-link {
             text-align: center;
             margin-top: 1.5rem;
         }
         .login-link a {
-            color: #4361ee;
+            color: #8c4566;
             text-decoration: none;
         }
         .login-link a:hover {
@@ -138,20 +138,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="register-container">
-        <h2><i class="fas fa-user-plus"></i> Регистрация</h2>
+        <h2>Регистрация</h2>
 
         <?php if ($error): ?>
             <div class="error">
-                <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?>
+                <?= htmlspecialchars($error) ?>
             </div>
         <?php endif; ?>
 
         <?php if ($success): ?>
             <div style="text-align: center; margin: 1rem 0; color: green;">
-                <i class="fas fa-check-circle"></i> Регистрация прошла успешно!
+                Регистрация прошла успешно!
             </div>
             <div class="login-link">
-                <a href="login.php"><i class="fas fa-sign-in-alt"></i> Перейти к входу</a>
+                <a href="login.php">Перейти к входу</a>
             </div>
         <?php else: ?>
             <form method="POST">
@@ -172,12 +172,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <button type="submit">
-                    <i class="fas fa-user-plus"></i> Зарегистрироваться
+                    Зарегистрироваться
                 </button>
             </form>
 
             <div class="login-link">
-                Уже есть аккаунт? <a href="login.php"><i class="fas fa-sign-in-alt"></i> Войти</a>
+                Уже есть аккаунт? <a href="login.php"> Войти</a>
             </div>
         <?php endif; ?>
     </div>
