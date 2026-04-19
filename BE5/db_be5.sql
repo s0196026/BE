@@ -1,6 +1,8 @@
 -- Таблица заявок
 CREATE TABLE applications (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    login VARCHAR(50) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     fio VARCHAR(200) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(100) NOT NULL,
