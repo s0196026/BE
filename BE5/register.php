@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->execute([
                     $login,
                     $passwordHash,
-                    $login . '@example.com'
+                    $login . '@example.com',
                     $defaultBirthdate = '2000-01-01',
                     $defaultGender = 'female',
                     $defaultBio = '_'
