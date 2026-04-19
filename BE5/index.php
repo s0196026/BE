@@ -209,6 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         body {
+            color: #64400f;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
             color: var(--dark);
