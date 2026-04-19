@@ -281,8 +281,6 @@ header {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 .logout-btn {
             display: inline-flex;
