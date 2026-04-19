@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Создание аккаунта
                 $stmt = $db->prepare("INSERT INTO applications
                     (login, password_hash, fio, phone, email, birthdate, gender, bio, contract_agreed)
-                    VALUES (?, ?, 'Новый пользователь', '+70000000000', ?, DateTime('-1 years'), 'Женский', '_' 1)");
+                    VALUES (?, ?, 'Новый пользователь', '+70000000000', ?, DateTime('-1 years'), 'female', '_' 1)");
 
                 $stmt->execute([
                     $login,
