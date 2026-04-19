@@ -197,211 +197,118 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Анкета</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --danger: #f72585;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
         body {
-            color: #64400f;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--dark);
-            line-height: 1.6;
-            padding: 20px;
-        }
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ffe9b0;
+    color: #4e1609;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+h1 {
+    text-align: center;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
+.success-message{
+    color: white;
+    font: 16pt bold;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #EC9311;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+}
 
-        h1 {
-            color: var(--primary);
-            font-size: 28px;
-        }
+form{
+    color: #4e1609;
+    background-color: #fcdea8;
+    padding: 10px;
+    border-radius: 4px;
+}
 
-        .logout-btn {
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #fcdea8;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 100px;
+}
+
+.radio-group, .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 5px 0;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+button {
+    background-color: #EC9311;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #9cd8cc;
+}
+.logout-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background-color: var(--danger);
+            background-color: #EC9311;
+    color: white;
             color: white;
             padding: 8px 16px;
-            border-radius: var(--border-radius);
+            border-radius: 4px;
             text-decoration: none;
-            transition: all 0.3s;
         }
 
         .logout-btn:hover {
-            background-color: #d1146d;
-            transform: translateY(-2px);
-        }
-
-        .alert {
-            padding: 12px 16px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .alert.success {
-            background-color: rgba(76, 201, 240, 0.2);
-            border-left: 4px solid var(--success);
-            color: #0a6c83;
-        }
-
-        .alert.error {
-            background-color: rgba(247, 37, 133, 0.2);
-            border-left: 4px solid var(--danger);
-            color: #a11a56;
-        }
-
-        form {
-            background: white;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="tel"],
-        .form-group input[type="email"],
-        .form-group input[type="date"],
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .error-field {
-            border-color: var(--danger) !important;
-        }
-
-        .error {
-            color: var(--danger);
-            font-size: 14px;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .radio-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .radio-group input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        select[multiple] {
-            height: auto;
-            min-height: 120px;
-            padding: 8px !important;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            form {
-                padding: 20px;
-            }
+            background-color: #9cd8cc;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-edit"></i> Анкета</h1>
+            <h1>Анкета</h1>
             <a href="logout.php" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Выйти
+                Выйти
             </a>
         </header>
 
-        <?php if (isset($_GET['success'])): ?>
-            <div class="alert success">
-                <i class="fas fa-check-circle"></i> Данные успешно сохранены!
-            </div>
-        <?php endif; ?>
-
         <?php if (isset($_COOKIE['error_db'])): ?>
             <div class="alert error">
-                <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_db']) ?>
+                <?= htmlspecialchars($_COOKIE['error_db']) ?>
             </div>
         <?php endif; ?>
 
@@ -414,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            class="<?= isset($_COOKIE['error_fio']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_fio'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_fio']) ?>
+            <?= htmlspecialchars($_COOKIE['error_fio']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -427,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            class="<?= isset($_COOKIE['error_phone']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_phone'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_phone']) ?>
+            <?= htmlspecialchars($_COOKIE['error_phone']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -440,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            class="<?= isset($_COOKIE['error_email']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_email'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_email']) ?>
+            <?= htmlspecialchars($_COOKIE['error_email']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -453,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            class="<?= isset($_COOKIE['error_birthdate']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_birthdate'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_birthdate']) ?>
+            <?= htmlspecialchars($_COOKIE['error_birthdate']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -463,17 +370,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <label>Пол:</label>
     <div class="radio-group">
         <input type="radio" id="male" name="gender" value="male"
-               <?= (isset($_COOKIE['form_gender']) && $_COOKIE['form_gender'] == 'male') ? 'checked' : '' ?>>
+               <?= (isset($_COOKIE['form_gender']) && $_COOKIE['form_gender'] == 'male') ? 'checked' : '' ?>
         <label for="male">Мужской</label>
     </div>
     <div class="radio-group">
         <input type="radio" id="female" name="gender" value="female"
-               <?= (isset($_COOKIE['form_gender']) && $_COOKIE['form_gender'] == 'female') ? 'checked' : '' ?>>
+               <?= (isset($_COOKIE['form_gender']) && $_COOKIE['form_gender'] == 'female') ? 'checked' : '' ?>
         <label for="female">Женский</label>
     </div>
     <?php if (isset($_COOKIE['error_gender'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_gender']) ?>
+            <?= htmlspecialchars($_COOKIE['error_gender']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -488,14 +395,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $selectedLangs = isset($_COOKIE['form_languages']) ? explode(',', $_COOKIE['form_languages']) : [];
 
         foreach ($options as $lang): ?>
-            <option value="<?= $lang ?>" <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>>
+            <option value="<?= $lang ?>" <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>
                 <?= $lang ?>
             </option>
         <?php endforeach; ?>
     </select>
     <?php if (isset($_COOKIE['error_languages'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_languages']) ?>
+            <?= htmlspecialchars($_COOKIE['error_languages']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -508,7 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               isset($_COOKIE['form_bio']) ? htmlspecialchars($_COOKIE['form_bio']) : '' ?></textarea>
     <?php if (isset($_COOKIE['error_bio'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_bio']) ?>
+            <?= htmlspecialchars($_COOKIE['error_bio']) ?>
         </div>
     <?php endif; ?>
 </div>
@@ -517,20 +424,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <div class="checkbox-group">
         <input type="checkbox" id="contract" name="contract" value="1"
-               <?= (isset($_COOKIE['form_contract']) && $_COOKIE['form_contract'] == '1') ? 'checked' : '' ?>>
-        <label for="contract">Согласен на обработку данных</label>
+               <?= (isset($_COOKIE['form_contract']) && $_COOKIE['form_contract'] == '1') ? 'checked' : '' ?>
+        <label for="contract">С контрактом ознакомлен(-а)</label>
     </div>
     <?php if (isset($_COOKIE['error_contract'])): ?>
         <div class="error">
-            <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($_COOKIE['error_contract']) ?>
+            <?= htmlspecialchars($_COOKIE['error_contract']) ?>
         </div>
     <?php endif; ?>
 </div>
+  <button type="submit">Сохранить данные</button>
+        
+        <?php if (isset($showSuccess) && $showSuccess): ?>
+            <div class="success-message">
+                Данные сохранены и привязаны к вашему логину!
+            </div>
+            
+        <?php endif; ?>
 </div>
-
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-save"></i> Сохранить данные
-            </button>
         </form>
     </div>
 </body>
