@@ -124,6 +124,7 @@ color: #4e1609;
         }
         .error {
             border: 2px solid red;
+            border-radius: 4px;
             color: red;
             margin: 15px 0;
             padding: 10px;
