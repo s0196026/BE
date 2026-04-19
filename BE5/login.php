@@ -88,7 +88,6 @@ color: #4e1609;
         h1 {
             text-align: center;
             margin-bottom: 25px;
-            color: #333;
         }
         .form-group {
             margin-bottom: 20px;
@@ -97,7 +96,6 @@ color: #4e1609;
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: #555;
         }
         input[type="text"],
         input[type="password"] {
