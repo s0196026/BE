@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $login,
                     $passwordHash,
                     $login . '@example.com'
-                    $defaultBirthdate = DateTime('-1 years'),
+                    $defaultBirthdate = '2000-01-01',
                     $defaultGender = 'female',
                     $defaultBio = '_'
                 ]);
