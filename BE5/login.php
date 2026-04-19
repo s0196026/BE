@@ -67,9 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Вход в систему</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            //font-family: Arial, sans-serif;
+            background-color: #ffe9b0;
             margin: 0;
+color: #4e1609;
             padding: 20px;
             display: flex;
             justify-content: center;
@@ -77,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             height: 100vh;
         }
         .login-container {
-            background: white;
+color: #4e1609;
+    background-color: #fcdea8;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
         }
@@ -110,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button {
             width: 100%;
             padding: 12px;
-            background-color: #4CAF50;
+            background-color: #EC9311;
             color: white;
             border: none;
             border-radius: 4px;
@@ -119,14 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #9cd8cc;
         }
         .error {
-            color: #d32f2f;
+            color: red;
             margin: 15px 0;
             padding: 10px;
-            background-color: #fce4e4;
-            border-radius: 4px;
             text-align: center;
         }
         .register-link {
