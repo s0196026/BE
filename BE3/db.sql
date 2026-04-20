@@ -1,13 +1,13 @@
 -- заявки
 CREATE TABLE applications (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    fio VARCHAR(200) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    birthdate DATE NOT NULL,
-    gender ENUM('male', 'female') NOT NULL,
-    bio TEXT NOT NULL,
-    contract_agreed BOOLEAN NOT NULL,
+    fio VARCHAR(200) DEFAULT NULL,
+    phone VARCHAR(20) DEFAULT NULL,
+    email VARCHAR(100) DEFAULT NULL,
+    birthdate DATE DEFAULT NULL,
+    gender ENUM('male', 'female') DEFAULT NULL,
+    bio TEXT DEFAULT NULL,
+    contract_agreed BOOLEAN NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
