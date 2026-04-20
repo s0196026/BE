@@ -288,21 +288,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!-- Языки программирования -->
 <div class="form-group">
     <label for="languages">Любимые языки программирования:</label>
-    <select id="languages" name="languages[]" multiple size="5"
+    <select id="languages" name="languages[]" multiple="multiple"
             class="<?= isset($_COOKIE['error_languages']) ? 'error-field' : '' ?>">
         <?php
         $options = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
         $selectedLangs = isset($_COOKIE['form_languages']) ? explode(',', $_COOKIE['form_languages']) : [];
 
         foreach ($options as $lang): ?>
-            <option value="<?= $lang ?>" <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>
+            <option value="<?= $lang ?>"
+                <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>
                 <?= $lang ?>
             </option>
         <?php endforeach; ?>
     </select>
     <?php if (isset($_COOKIE['error_languages'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_languages']) ?>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_languages']) ?>
         </div>
     <?php endif; ?>
 </div>
