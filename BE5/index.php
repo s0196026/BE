@@ -29,6 +29,24 @@ function setErrorCookie($name, $message) {
     setcookie("error_$name", $message, 0, '/');
 }
 
+// Функция для получения значения поля (приоритет: БД -> COOKIE -> пустая строка)
+function getFieldValue($fieldName, $userData, $dbFieldName = null) {
+    $dbField = $dbFieldName ?: $fieldName;
+    
+    // 1. Сначала проверяем COOKIE (новые данные из формы с ошибкой)
+    if (isset($_COOKIE["form_$fieldName"])) {
+        return htmlspecialchars($_COOKIE["form_$fieldName"]);
+    }
+    
+    // 2. Затем данные из БД (уже сохраненные)
+    if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null) {
+        return htmlspecialchars($userData[$dbField]);
+    }
+    
+    // 3. Иначе пустая строка
+    return '';
+}
+
 // Подключение к БД
 $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -217,12 +235,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <label for="fio">ФИО:</label>
     <input type="text" id="fio" name="fio"
-           value="<?= isset($_COOKIE['form_fio']) ? htmlspecialchars($_COOKIE['form_fio']) : '' ?>"
+           value="<?= getFieldValue('fio', $userData, 'fio') ?>"
            class="<?= isset($_COOKIE['error_fio']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_fio'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_fio']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
     <?php endif; ?>
 </div>
 
@@ -230,12 +246,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <label for="phone">Телефон:</label>
     <input type="tel" id="phone" name="phone"
-           value="<?= isset($_COOKIE['form_phone']) ? htmlspecialchars($_COOKIE['form_phone']) : '' ?>"
+           value="<?= getFieldValue('phone', $userData, 'phone') ?>"
            class="<?= isset($_COOKIE['error_phone']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_phone'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_phone']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
     <?php endif; ?>
 </div>
 
@@ -243,12 +257,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <label for="email">Email:</label>
     <input type="email" id="email" name="email"
-           value="<?= isset($_COOKIE['form_email']) ? htmlspecialchars($_COOKIE['form_email']) : '' ?>"
+           value="<?= getFieldValue('email', $userData, 'email') ?>"
            class="<?= isset($_COOKIE['error_email']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_email'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_email']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_email']) ?></div>
     <?php endif; ?>
 </div>
 
@@ -256,12 +268,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <label for="birthdate">Дата рождения:</label>
     <input type="date" id="birthdate" name="birthdate"
-           value="<?= isset($_COOKIE['form_birthdate']) ? htmlspecialchars($_COOKIE['form_birthdate']) : '' ?>"
+           value="<?= getFieldValue('birthdate', $userData, 'birthdate') ?>"
            class="<?= isset($_COOKIE['error_birthdate']) ? 'error-field' : '' ?>">
     <?php if (isset($_COOKIE['error_birthdate'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_birthdate']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_birthdate']) ?></div>
     <?php endif; ?>
 </div>
 
@@ -269,19 +279,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <label>Пол:</label>
     <div class="radio-group">
+        <?php $genderValue = getFieldValue('gender', $userData, 'gender'); ?>
         <input type="radio" id="male" name="gender" value="male"
-               <?= (isset($_COOKIE['form_gender']) && $_COOKIE['form_gender'] == 'male') ? 'checked' : '' ?>
+               <?= ($genderValue == 'male') ? 'checked' : '' ?>>
         <label for="male">Мужской</label>
     </div>
     <div class="radio-group">
         <input type="radio" id="female" name="gender" value="female"
-               <?= (isset($_COOKIE['form_gender']) && $_COOKIE['form_gender'] == 'female') ? 'checked' : '' ?>
+               <?= ($genderValue == 'female') ? 'checked' : '' ?>>
         <label for="female">Женский</label>
     </div>
     <?php if (isset($_COOKIE['error_gender'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_gender']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_gender']) ?></div>
     <?php endif; ?>
 </div>
 
@@ -289,47 +298,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="form-group">
     <label for="languages">Любимые языки программирования:</label>
     <select id="languages" name="languages[]" multiple size="5"
-        class="<?= isset($_COOKIE['error_languages']) ? 'error-field' : '' ?>">
-    <?php
-    $options = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
-    $selectedLangs = isset($_COOKIE['form_languages']) ? explode(',', $_COOKIE['form_languages']) : [];
-
-    foreach ($options as $lang): ?>
-        <option value="<?= $lang ?>" <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>>
-            <?= $lang ?>
-        </option>
-    <?php endforeach; ?>
-</select>
+            class="<?= isset($_COOKIE['error_languages']) ? 'error-field' : '' ?>">
+        <?php
+        $options = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
+        
+        // Приоритет: COOKIE > БД
+        $selectedLangs = [];
+        if (isset($_COOKIE['form_languages']) && !empty($_COOKIE['form_languages'])) {
+            $selectedLangs = explode(',', $_COOKIE['form_languages']);
+        } elseif ($userLanguages && !empty($userLanguages)) {
+            $selectedLangs = $userLanguages;
+        }
+        
+        foreach ($options as $lang): ?>
+            <option value="<?= $lang ?>" <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>>
+                <?= $lang ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
     <?php if (isset($_COOKIE['error_languages'])): ?>
-        <div class="error"><?= htmlspecialchars($_COOKIE['error_languages']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_languages']) ?></div>
     <?php endif; ?>
 </div>
 
 <!-- Биография -->
 <div class="form-group">
     <label for="bio">Биография:</label>
-    <textarea id="bio" name="bio"
-              class="<?= isset($_COOKIE['error_bio']) ? 'error-field' : '' ?>"><?=
-              isset($_COOKIE['form_bio']) ? htmlspecialchars($_COOKIE['form_bio']) : '' ?></textarea>
+    <textarea id="bio" name="bio" class="<?= isset($_COOKIE['error_bio']) ? 'error-field' : '' ?>"><?= 
+        getFieldValue('bio', $userData, 'bio') 
+    ?></textarea>
     <?php if (isset($_COOKIE['error_bio'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_bio']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_bio']) ?></div>
     <?php endif; ?>
 </div>
 
 <!-- Согласие -->
 <div class="form-group">
     <div class="checkbox-group">
+        <?php $contractValue = getFieldValue('contract', $userData, 'contract_agreed'); ?>
         <input type="checkbox" id="contract" name="contract" value="1"
-               <?= (isset($_COOKIE['form_contract']) && $_COOKIE['form_contract'] == '1') ? 'checked' : '' ?>
+               <?= ($contractValue == '1' || $contractValue == 1) ? 'checked' : '' ?>>
         <label for="contract">С контрактом ознакомлен(-а)</label>
     </div>
     <?php if (isset($_COOKIE['error_contract'])): ?>
-        <div class="error">
-            <?= htmlspecialchars($_COOKIE['error_contract']) ?>
-        </div>
+        <div class="error"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
     <?php endif; ?>
 </div>
   <button type="submit">Сохранить данные</button>
