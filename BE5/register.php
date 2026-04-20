@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Создание аккаунта
                 $stmt = $db->prepare("INSERT INTO applications
                     (login, password_hash, contract_agreed)
-                    VALUES (?, ?, 1)");
+                    VALUES (?, ?, 0)");
 
                 $stmt->execute([
                     $login,
