@@ -297,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         foreach ($options as $lang): ?>
             <option value="<?= $lang ?>"
                 <?= in_array($lang, $selectedLangs) ? 'selected' : '' ?>
-                <?= $lang ?>
+                <?= $lang ?>>
             </option>
         <?php endforeach; ?>
     </select>
