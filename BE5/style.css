@@ -23,6 +23,7 @@ form{
     background-color: #fcdea8;
     padding: 10px;
     border-radius: 4px;
+    font-weight: bold;
 }
 
 .form-group {
