@@ -345,13 +345,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php endif; ?>
 </div>
   <button type="submit">Сохранить данные</button>
-        
-        <?php if (isset($showSuccess) && $showSuccess): ?>
-            <div class="success-message">
-                Данные сохранены и привязаны к вашему логину!
-            </div>
-            
-        <?php endif; ?>
+<?php if (isset($_GET['success'])): ?>
+    <div class="success-message">
+        Данные сохранены!
+    </div>
+<?php endif; ?>
 </div>
         </form>
     </div>
