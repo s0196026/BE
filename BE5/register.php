@@ -39,16 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
                 // Создание аккаунта
                 $stmt = $db->prepare("INSERT INTO applications
-                    (login, password_hash, fio, phone, email, birthdate, gender, bio, contract_agreed)
-                    VALUES (?, ?, 'Новый пользователь', '+70000000000', ?, ?, ?, ?, 1)");
+                    (login, password_hash, contract_agreed)
+                    VALUES (?, ?, 1)");
 
                 $stmt->execute([
                     $login,
-                    $passwordHash,
-                    $login . '@example.com',
-                    $defaultBirthdate = '2000-01-01',
-                    $defaultGender = 'female',
-                    $defaultBio = '_'
+                    $passwordHash
                 ]);
 
                 $success = true;
