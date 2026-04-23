@@ -68,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
             try {
+                // Сохраняем логин и пароль в сессию ДО регистрации
+                $_SESSION['temp_login'] = $login;
+                $_SESSION['temp_password'] = $password;
+                
                 // фиксация аккаунта
                 $stmt = $db->prepare("INSERT INTO applications
                     (login, password_hash, contract_agreed)
@@ -78,33 +82,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
                     $passwordHash
                 ]);
 
-                $success = true;
+                // Получаем ID нового пользователя
+                $newUserId = $db->lastInsertId();
+                $_SESSION['user_id'] = $newUserId;
+                
+                // Перенаправляем на index.php
+                header('Location: index.php');
+                exit();
+                
             } catch (PDOException $e) {
                 $error = 'Ошибка регистрации: ' . $e->getMessage();
             }
         }
-    }
-    //-------------
-
-    // поиск пользователя в БД
-    try {
-        $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
-        $stmt->execute([$login]);
-        $user = $stmt->fetch();
-
-        if ($user) {
-            if (password_verify($password, $user['password_hash'])) {
-                $_SESSION['user_id'] = $user['id'];
-                header('Location: index.php');
-                exit();
-            } else {
-                $error = 'Неверный пароль';
-            }
-        } else {
-            $error = 'Пользователь с таким логином не существует';
-        }
-    } catch (PDOException $e) {
-        $error = 'Ошибка базы данных';
     }
 }
 ?>
