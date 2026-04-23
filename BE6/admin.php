@@ -69,7 +69,7 @@ $stats = $db->query("
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
+            --primary: #EC9311;
             --danger: #f72585;
             --success: #4cc9f0;
             --light: #f8f9fa;
