@@ -215,9 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container">
         <header>
             <h1>Анкета</h1>
-            <a href="logout.php" class="logout-btn">
-                Выйти
-            </a>
+<button type="submit" href="logout.php">Выйти</button>
         </header>
 
         <?php if (isset($_COOKIE['error_db'])): ?>
