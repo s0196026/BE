@@ -233,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </a>
         </header>
         <?php if ($showCredentials): ?>
-    <div class="success-reg" style="border: 4px solid #EC9311;
+    <div style="border: 4px solid #EC9311;
     border-radius: 4px;
     padding: 15px;
     margin-bottom: 20px;
