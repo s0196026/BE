@@ -239,7 +239,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
     </div>
 <?php endif; ?>
-<?php endif; ?>
 
         <?php if (isset($_COOKIE['error_db'])): ?>
             <div class="alert error">
