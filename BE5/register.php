@@ -99,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 1rem;
+                box-sizing: border-box;
         }
         button {
             width: 100%;
