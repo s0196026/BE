@@ -58,31 +58,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
         $error = 'Пароль должен быть не менее 6 символов';
     } else {
         // проверка уникальности логина
-        $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
-        $stmt->execute([$login]);
+$stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
+$stmt->execute([$login]);
 
-        if ($stmt->fetchColumn() > 0) {
-            $error = 'Этот логин уже занят';
-        } else {
-            // хеширование пароля
-            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+if ($stmt->fetchColumn() > 0) {
+    $error = 'Этот логин уже занят';
+} else {
+    // хеширование пароля
+    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
-            try {
-                // фиксация аккаунта
-                $stmt = $db->prepare("INSERT INTO applications
-                    (login, password_hash, contract_agreed)
-                    VALUES (?, ?, 0)");
+    try {
+        // фиксация аккаунта
+        $stmt = $db->prepare("INSERT INTO applications
+            (login, password_hash, contract_agreed)
+            VALUES (?, ?, 0)");
 
-                $stmt->execute([
-                    $login,
-                    $passwordHash
-                ]);
+        $stmt->execute([
+            $login,
+            $passwordHash
+        ]);
 
-                $success = true;
-            } catch (PDOException $e) {
-                $error = 'Ошибка регистрации: ' . $e->getMessage();
-            }
-        }
+        // ПОЛУЧАЕМ ID НОВОГО ПОЛЬЗОВАТЕЛЯ
+        $userId = $db->lastInsertId();
+        
+        // СОХРАНЯЕМ ЛОГИН И ПАРОЛЬ В СЕССИЮ
+        $_SESSION['temp_login'] = $login;
+        $_SESSION['temp_password'] = $password;
+        
+        // АВТОМАТИЧЕСКИ АВТОРИЗУЕМ
+        $_SESSION['user_id'] = $userId;
+        
+        // ПЕРЕНАПРАВЛЯЕМ НА АНКЕТУ
+        header('Location: index.php');
+        exit();
+        
+    } catch (PDOException $e) {
+        $error = 'Ошибка регистрации: ' . $e->getMessage();
+    }
+}
     }
     //-------------
 
