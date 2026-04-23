@@ -4,23 +4,23 @@ session_start();
 $isFirstVisit = !isset($_COOKIE['form_initialized']);
 
 if ($isFirstVisit) {
-    // Устанавливаем куку, что форма уже посещалась
+    // кука, что форма уже посещалась
     setcookie('form_initialized', '1', time() + 3600 * 24 * 30, '/'); // на 30 дней
 
-    // Очищаем все возможные ошибки
+    // очистка ошибок
     foreach ($_COOKIE as $name => $value) {
         if (strpos($name, 'error_') === 0 || strpos($name, 'form_') === 0) {
             setcookie($name, '', time() - 3600, '/');
         }
     }
 }
-// Редирект если не авторизован
+// перенаправление если не авторизован
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
 
-// Функции для работы с cookies
+// функции для работы с cookies
 function setFormCookie($name, $value, $expire = 0) {
     setcookie("form_$name", $value, $expire, '/');
 }
@@ -29,29 +29,25 @@ function setErrorCookie($name, $message) {
     setcookie("error_$name", $message, 0, '/');
 }
 
-// Функция для получения значения поля (приоритет: БД -> COOKIE -> пустая строка)
+// заполнение значений полей
 function getFieldValue($fieldName, $userData, $dbFieldName = null) {
     $dbField = $dbFieldName ?: $fieldName;
     
-    // 1. Сначала проверяем COOKIE (новые данные из формы с ошибкой)
     if (isset($_COOKIE["form_$fieldName"])) {
         return htmlspecialchars($_COOKIE["form_$fieldName"]);
     }
     
-    // 2. Затем данные из БД (уже сохраненные)
     if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null) {
         return htmlspecialchars($userData[$dbField]);
     }
-    
-    // 3. Иначе пустая строка
     return '';
 }
 
-// Подключение к БД
+// подключение к БД
 $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
-// Очистка ошибок при первом заходе
+// очистка ошибок
 if (!isset($_GET['form_submitted'])) {
     foreach ($_COOKIE as $name => $value) {
         if (strpos($name, 'error_') === 0) {
@@ -59,24 +55,24 @@ if (!isset($_GET['form_submitted'])) {
         }
     }
 }
-// Загрузка данных пользователя
+// загрузка данных пользователя
 $stmt = $db->prepare("SELECT * FROM applications WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $userData = $stmt->fetch();
 
-// Загрузка выбранных языков
+// загрузка выбранных языков
 $langStmt = $db->prepare("SELECT pl.name FROM application_languages al
                          JOIN programming_languages pl ON al.language_id = pl.id
                          WHERE al.application_id = ?");
 $langStmt->execute([$_SESSION['user_id']]);
 $userLanguages = $langStmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Обработка отправки формы
+// обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
     $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
-    // Валидация ФИО
+    // валидация ФИО
     if (empty($_POST['fio'] ?? '')) {
         $errors['fio'] = 'Заполните ФИО';
         setErrorCookie('fio', $errors['fio']);
@@ -86,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     setFormCookie('fio', $_POST['fio'] ?? '');
 
-    // Валидация телефона
+    // валидация телефона
     if (empty($_POST['phone'] ?? '')) {
         $errors['phone'] = 'Заполните телефон';
         setErrorCookie('phone', $errors['phone']);
@@ -96,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     setFormCookie('phone', $_POST['phone'] ?? '');
 
-    // Валидация email
+    // валидация email
     if (empty($_POST['email'] ?? '')) {
         $errors['email'] = 'Заполните email';
         setErrorCookie('email', $errors['email']);
@@ -106,21 +102,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     setFormCookie('email', $_POST['email'] ?? '');
 
-    // Валидация даты рождения
+    // валидация др
     if (empty($_POST['birthdate'] ?? '')) {
         $errors['birthdate'] = 'Укажите дату рождения';
         setErrorCookie('birthdate', $errors['birthdate']);
     }
     setFormCookie('birthdate', $_POST['birthdate'] ?? '');
 
-    // Валидация пола
+    // валидация пола
     if (empty($_POST['gender'] ?? '')) {
         $errors['gender'] = 'Укажите пол';
         setErrorCookie('gender', $errors['gender']);
     }
     setFormCookie('gender', $_POST['gender'] ?? '');
 
-    // Валидация языков программирования
+    // валидация яп
     $languages = isset($_POST['languages']) && is_array($_POST['languages']) ? $_POST['languages'] : [];
     if (empty($languages)) {
         $errors['languages'] = 'Выберите хотя бы один язык';
@@ -136,30 +132,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     setFormCookie('languages', !empty($languages) ? implode(',', $languages) : '');
 
-    // Валидация биографии
+    // валидация био
     if (empty($_POST['bio'] ?? '')) {
         $errors['bio'] = 'Заполните биографию';
         setErrorCookie('bio', $errors['bio']);
     }
     setFormCookie('bio', $_POST['bio'] ?? '');
 
-    // Валидация согласия
+    // валидация чекбокса
     if (empty($_POST['contract'] ?? '')) {
         $errors['contract'] = 'Необходимо согласие';
         setErrorCookie('contract', $errors['contract']);
     }
 
-    // Если есть ошибки - редирект
+    // ошибки - редирект
     if (!empty($errors)) {
     header('Location: index.php?form_submitted=1');
     exit();
 }
 
-    // Если ошибок нет - сохраняем в БД
+    // ошибок нет - сохраняем в БД
     try {
         $db->beginTransaction();
 
-        // Обновление основной информации
+        // обновление основной информации
         $stmt = $db->prepare("UPDATE applications SET
             fio = ?, phone = ?, email = ?, birthdate = ?,
             gender = ?, bio = ?, contract_agreed = ?
@@ -176,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_id']
         ]);
 
-        // Обновление языков
+        // обновление яп
         $db->prepare("DELETE FROM application_languages WHERE application_id = ?")
            ->execute([$_SESSION['user_id']]);
 
@@ -188,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $db->commit();
 
-        // Очистка куков после успешного сохранения
+        // очистка куков после успешного сохранения
         foreach ($_COOKIE as $name => $value) {
             if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
                 setcookie($name, '', time() - 3600, '/');
