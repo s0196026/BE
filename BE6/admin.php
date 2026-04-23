@@ -230,7 +230,7 @@ $stats = $db->query("
 
         .stat-card {
             background: white;
-            //padding: 15px;
+            padding: 15px;
             border-radius: var(--border-radius);
         }
 
