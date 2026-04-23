@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 30px;
             border-radius: 8px;
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
         }
         h1 {
             text-align: center;
@@ -138,6 +138,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .register-link a:hover {
             text-decoration: underline;
         }
+.genbut{
+margin-left: 10px;
+width: 320px;
+}
+.divinp{
+display: flex;
+            justify-content: space-between;
+            align-items: center;
+}
     </style>
 </head>
 <body>
@@ -151,12 +160,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST">
             <div class="form-group">
                 <label for="login">Логин:</label>
-                <input type="text" id="login" name="login" required>
+<div class="divinp"><input type="text" id="login" name="login" required>
+<button type="submit" class="genbut">Сгенерировать логин</button></div>
             </div>
 
             <div class="form-group">
                 <label for="password">Пароль:</label>
-                <input type="password" id="password" name="password" required>
+<div class="divinp"><input type="password" id="password" name="password" required>
+<button type="submit" class="genbut">Сгенерировать пароль</button></div>
             </div>
 
             <button type="submit">Войти</button>
