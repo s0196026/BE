@@ -66,19 +66,15 @@ $stats = $db->query("
     <style>
         :root {
             --primary: #4361ee;
-            --primary-dark: #3a56d4;
             --danger: #f72585;
             --success: #4cc9f0;
             --light: #f8f9fa;
-            --dark: #212529;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 4px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--dark);
+            color: #4e1609;
+            background-color: #ffe9b0;
             line-height: 1.6;
             padding: 20px;
         }
@@ -93,30 +89,21 @@ $stats = $db->query("
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
-
-        h1 {
-            color: var(--primary);
-            font-size: 28px;
-        }
-
+        
         .logout-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background-color: var(--danger);
+            background-color: #EC9311;
             color: white;
             padding: 8px 16px;
-            border-radius: var(--border-radius);
+            border-radius: 4px;
             text-decoration: none;
-            transition: all 0.3s;
         }
 
         .logout-btn:hover {
-            background-color: #d1146d;
-            transform: translateY(-2px);
+            background-color: #9cd8cc;
         }
 
         .alert {
@@ -129,9 +116,9 @@ $stats = $db->query("
         }
 
         .alert.success {
-            background-color: rgba(76, 201, 240, 0.2);
-            border-left: 4px solid var(--success);
-            color: #0a6c83;
+            background-color: #EC9311;
+            color: white;
+            font-weight: bold;
         }
 
         .alert.error {
@@ -157,32 +144,6 @@ $stats = $db->query("
             font-weight: 500;
         }
 
-        .form-group input[type="text"],
-        .form-group input[type="tel"],
-        .form-group input[type="email"],
-        .form-group input[type="date"],
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .error-field {
-            border-color: var(--danger) !important;
-        }
-
         .error {
             color: var(--danger);
             font-size: 14px;
@@ -190,36 +151,6 @@ $stats = $db->query("
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .radio-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .radio-group input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        select[multiple] {
-            height: auto;
-            min-height: 120px;
-            padding: 8px !important;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
         }
 
         .submit-btn {
@@ -246,7 +177,6 @@ $stats = $db->query("
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
-            box-shadow: var(--shadow);
             border-radius: var(--border-radius);
             overflow: hidden;
         }
@@ -259,7 +189,7 @@ $stats = $db->query("
         }
 
         .admin-table th {
-            background-color: var(--primary);
+            background-color: #EC9311;
             color: white;
         }
 
@@ -278,12 +208,12 @@ $stats = $db->query("
         }
 
         .edit-btn {
-            background-color: var(--success);
+            background-color: green;
             color: white;
         }
 
         .delete-btn {
-            background-color: var(--danger);
+            background-color: red;
             color: white;
         }
 
@@ -326,30 +256,30 @@ $stats = $db->query("
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-shield"></i> Админ-панель</h1>
+            <h1>Админ-панель</h1>
             <a href="logout.php" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Выйти
+                Выйти
             </a>
         </header>
 
         <?php if (isset($_GET['deleted'])): ?>
             <div class="alert success">
-                <i class="fas fa-check-circle"></i> Пользователь успешно удален!
+                Пользователь успешно удален!
             </div>
         <?php endif; ?>
 
-        <h2><i class="fas fa-chart-pie"></i> Статистика по языкам</h2>
+        <h2>Статистика по языкам</h2>
         <div class="stats-grid">
             <?php foreach ($stats as $stat): ?>
                 <div class="stat-card">
                     <h3><?= htmlspecialchars($stat['name']) ?></h3>
                     <div class="stat-value"><?= $stat['user_count'] ?></div>
-                    <p><i class="fas fa-users"></i> пользователей</p>
+                    <p> пользователей</p>
                 </div>
             <?php endforeach; ?>
         </div>
 
-        <h2><i class="fas fa-users"></i> Список пользователей</h2>
+        <h2>Список пользователей</h2>
         <table class="admin-table">
             <thead>
                 <tr>
@@ -373,10 +303,10 @@ $stats = $db->query("
                         <td><?= $user['gender'] == 'male' ? 'Мужской' : 'Женский' ?></td>
                         <td>
                             <a href="edit_user.php?id=<?= $user['id'] ?>" class="action-btn edit-btn">
-                                <i class="fas fa-edit"></i> Ред.
+                                Ред.
                             </a>
                             <a href="admin.php?delete=<?= $user['id'] ?>" class="action-btn delete-btn" onclick="return confirm('Удалить этого пользователя?')">
-                                <i class="fas fa-trash-alt"></i> Удал.
+                                Удал.
                             </a>
                         </td>
                     </tr>
