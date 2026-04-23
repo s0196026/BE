@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Подключение к БД
+// подключение к БД
 $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = trim($_POST['password'] ?? '');
     $password_confirm = trim($_POST['password_confirm'] ?? '');
 
-    // Валидация
+    // валидация
     if (empty($login)) {
         $error = 'Введите логин';
     } elseif (strlen($login) < 4) {
@@ -26,18 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($password !== $password_confirm) {
         $error = 'Пароли не совпадают';
     } else {
-        // Проверка уникальности логина
+        // проверка уникальности логина
         $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
         $stmt->execute([$login]);
 
         if ($stmt->fetchColumn() > 0) {
             $error = 'Этот логин уже занят';
         } else {
-            // Хеширование пароля
+            // хеширование пароля
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
             try {
-                // Создание аккаунта
+                // фиксация аккаунта
                 $stmt = $db->prepare("INSERT INTO applications
                     (login, password_hash, contract_agreed)
                     VALUES (?, ?, 0)");
@@ -64,9 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Регистрация</title>
     <style>
         body {
-color: #64400f;
-
-            //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: #64400f;
             background-color: #ffe9b0;
             display: flex;
             justify-content: center;
@@ -76,7 +74,7 @@ color: #64400f;
         }
         .register-container {
             color: #4e1609;
-    background-color: #fcdea8;
+            background-color: #fcdea8;
             padding: 2rem;
             border-radius: 4px;
             width: 100%;
