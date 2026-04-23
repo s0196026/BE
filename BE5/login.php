@@ -3,8 +3,8 @@ session_start();
 
 // Функция для генерации случайного логина
 function generateLogin() {
-    $adjectives = ['Fast', 'Smart', 'Cool', 'Happy', 'Bright', 'Clever', 'Wise', 'Brave', 'Calm', 'Lucky'];
-    $nouns = ['Coder', 'Dev', 'Programmer', 'Hacker', 'Master', 'Wizard', 'Ninja', 'Hero', 'Star', 'Ghost'];
+    $adjectives = ['Fast', 'Smart', 'Cool', 'Happy', 'Bright', 'Clever', 'Wise', 'Brave', 'Cool', 'Lucky'];
+    $nouns = ['Apple', 'Snow', 'Perfume', 'Goose', 'Cat', 'Sugar', 'Muse', 'Hero', 'Star', 'Ghost'];
     $random = rand(100, 999);
     
     return $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)] . $random;
@@ -32,9 +32,20 @@ $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
 ]);
 
 $error = '';
-$debug_info = '';
+$login_value = '';
+$password_value = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Обработка генерации логина
+if (isset($_POST['generate_login'])) {
+    $login_value = generateLogin();
+}
+
+// Обработка генерации пароля
+if (isset($_POST['generate_password'])) {
+    $password_value = generatePassword();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && !isset($_POST['generate_password'])) {
     $login = trim($_POST['login']);
     $password = trim($_POST['password']);
 
@@ -77,43 +88,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     //-------------
 
-    // отладочная информация
-    $debug_info .= "Попытка входа: login='$login', password='$password'\n";
-
+    // поиск пользователя в БД
     try {
-        // поиск пользователя в БД
         $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
         $stmt->execute([$login]);
         $user = $stmt->fetch();
 
         if ($user) {
-            $debug_info .= "Найден пользователь: ID={$user['id']}\n";
-            $debug_info .= "Хэш из БД: {$user['password_hash']}\n";
-            $debug_info .= "Длина хэша: " . strlen($user['password_hash']) . " символов\n";
-
-            // проверка пароля
             if (password_verify($password, $user['password_hash'])) {
                 $_SESSION['user_id'] = $user['id'];
-                $debug_info .= "Пароль верный, авторизация успешна\n";
-
-                // перенаправление после успешного входа
                 header('Location: index.php');
                 exit();
             } else {
-                $debug_info .= "Ошибка: пароль не совпадает\n";
                 $error = 'Неверный пароль';
             }
         } else {
-            $debug_info .= "Ошибка: пользователь не найден\n";
             $error = 'Пользователь с таким логином не существует';
         }
     } catch (PDOException $e) {
         $error = 'Ошибка базы данных';
-        $debug_info .= "Ошибка БД: " . $e->getMessage() . "\n";
     }
-
-    // логируем отладочную информацию
-    error_log($debug_info);
 }
 ?>
 
@@ -219,8 +213,7 @@ display: flex;
             <div class="form-group">
                 <label for="login">Логин:</label>
                 <div class="divinp">
-//-----------
-                    <input type="text" id="login" name="login" value="<?= isset($_COOKIE['error_fio']) ? 'error-field' : '' ?>" required>
+                    <input type="text" id="login" name="login" value="<?= htmlspecialchars($login_value) ?>" required>
                     <button type="submit" class="genbut">Сгенерировать логин</button>
                 </div>
             </div>
@@ -228,7 +221,7 @@ display: flex;
             <div class="form-group">
                 <label for="password">Пароль:</label>
                 <div class="divinp">
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" value="<?= htmlspecialchars($password_value) ?>" required>
                     <button type="submit" class="genbut">Сгенерировать пароль</button>
                 </div>
             </div>
