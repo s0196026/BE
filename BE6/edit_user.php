@@ -3,7 +3,7 @@
 require_once 'admin_auth.php';
 
 // Подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=u68775", 'u68775', '7631071', [
+$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
