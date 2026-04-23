@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-// Если уже авторизован - перенаправляем на главную
+// уже авторизован - перенаправляем на главную
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
 
-// Подключение к БД
+// подключение к БД
 $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
@@ -19,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $login = trim($_POST['login']);
     $password = trim($_POST['password']);
 
-    // Отладочная информация
+    // отладочная информация
     $debug_info .= "Попытка входа: login='$login', password='$password'\n";
 
     try {
-        // Ищем пользователя в БД
+        // поиск пользователя в БД
         $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
         $stmt->execute([$login]);
         $user = $stmt->fetch();
@@ -33,12 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $debug_info .= "Хэш из БД: {$user['password_hash']}\n";
             $debug_info .= "Длина хэша: " . strlen($user['password_hash']) . " символов\n";
 
-            // Проверяем пароль
+            // проверка пароля
             if (password_verify($password, $user['password_hash'])) {
                 $_SESSION['user_id'] = $user['id'];
                 $debug_info .= "Пароль верный, авторизация успешна\n";
 
-                // Перенаправляем после успешного входа
+                // перенаправление после успешного входа
                 header('Location: index.php');
                 exit();
             } else {
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $debug_info .= "Ошибка БД: " . $e->getMessage() . "\n";
     }
 
-    // Логируем отладочную информацию
+    // логируем отладочную информацию
     error_log($debug_info);
 }
 ?>
