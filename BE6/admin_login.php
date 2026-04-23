@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход в панель администратора</title>
+    <title>Вход в админ-панель</title>
     <style>
         :root {
             --primary: #EC9311;
