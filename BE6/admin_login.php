@@ -61,12 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
     <title>Вход в панель администратора</title>
     <style>
         :root {
-            --primary: #4361ee;
-            --error: #f72585;
-            --background: #f8f9fa;
+            --primary: #EC9311;
+            --error: red;
+            --background: #ffe9b0;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4e1609;
             background-color: var(--background);
             display: flex;
             justify-content: center;
@@ -76,15 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
         }
         .login-container {
             background: white;
+            background-color: #fcdea8;
             padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
         }
         h1 {
             text-align: center;
-            color: var(--primary);
             margin-bottom: 1.5rem;
         }
         .form-group {
@@ -101,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 1rem;
+            box-sizing: border-box;
         }
         button {
             width: 100%;
@@ -114,17 +114,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
             margin-top: 1rem;
         }
         button:hover {
-            background-color: #3a56d4;
+            background-color: #red;
         }
         .error {
             color: var(--error);
             margin: 1rem 0;
             padding: 0.75rem;
-            background-color: rgba(247, 37, 133, 0.1);
+            border: solid red;
             border-radius: 4px;
         }
         .attempts-warning {
-            color: #ff6b35;
+            color: red;
             text-align: center;
             margin-top: 1rem;
         }
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
 
         <?php if ($error): ?>
             <div class="error">
-                <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?>
+                <?= htmlspecialchars($error) ?>
                 <?php if ($attempts > 0): ?>
                     <div style="margin-top: 0.5rem; font-size: 0.9rem;">
                         Попыток: <?= $attempts ?> из 5
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
 
         <?php if ($attempts >= 5): ?>
             <div class="attempts-warning">
-                <i class="fas fa-clock"></i> Превышено количество попыток. Подождите 5 минут.
+                Превышено количество попыток. Подождите 5 минут.
             </div>
         <?php else: ?>
             <form method="POST">
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
                 </div>
 
                 <button type="submit">
-                    <i class="fas fa-sign-in-alt"></i> Войти
+                    Войти
                 </button>
             </form>
         <?php endif; ?>
