@@ -67,10 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Вход в систему</title>
     <style>
         body {
-            //font-family: Arial, sans-serif;
             background-color: #ffe9b0;
             margin: 0;
-color: #64400f;
+            color: #64400f;
             padding: 20px;
             display: flex;
             justify-content: center;
@@ -78,8 +77,8 @@ color: #64400f;
             height: 100vh;
         }
         .login-container {
-color: #4e1609;
-    background-color: #fcdea8;
+            color: #4e1609;
+            background-color: #fcdea8;
             padding: 30px;
             border-radius: 8px;
             width: 100%;
