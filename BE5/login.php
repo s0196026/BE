@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
     $login = trim($_POST['login']);
     $password = trim($_POST['password']);
 
-    //-------------
+    // ВАЛИДАЦИЯ
     if (empty($login)) {
         $error = 'Введите логин';
     } elseif (strlen($login) < 4) {
@@ -57,55 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
     } elseif (strlen($password) < 6) {
         $error = 'Пароль должен быть не менее 6 символов';
     } else {
-        // проверка уникальности логина
-$stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
-$stmt->execute([$login]);
-
-if ($stmt->fetchColumn() > 0) {
-    $error = 'Этот логин уже занят';
-} else {
-    // хеширование пароля
-    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
-    try {
-        // фиксация аккаунта
-        $stmt = $db->prepare("INSERT INTO applications
-            (login, password_hash, contract_agreed)
-            VALUES (?, ?, 0)");
-
-        $stmt->execute([
-            $login,
-            $passwordHash
-        ]);
-
-        // ПОЛУЧАЕМ ID НОВОГО ПОЛЬЗОВАТЕЛЯ
-        $userId = $db->lastInsertId();
-        
-        // СОХРАНЯЕМ ЛОГИН И ПАРОЛЬ В СЕССИЮ
-        $_SESSION['temp_login'] = $login;
-        $_SESSION['temp_password'] = $password;
-        
-        // АВТОМАТИЧЕСКИ АВТОРИЗУЕМ
-        $_SESSION['user_id'] = $userId;
-        
-        // ПЕРЕНАПРАВЛЯЕМ НА АНКЕТУ
-        header('Location: index.php');
-        exit();
-        
-    } catch (PDOException $e) {
-        $error = 'Ошибка регистрации: ' . $e->getMessage();
-    }
-}
-    }
-    //-------------
-
-    // поиск пользователя в БД
-    try {
+        // СНАЧАЛА ПРОВЕРЯЕМ - ЕСТЬ ЛИ ТАКОЙ ПОЛЬЗОВАТЕЛЬ?
         $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
         $stmt->execute([$login]);
         $user = $stmt->fetch();
-
+        
         if ($user) {
+            // ПОЛЬЗОВАТЕЛЬ СУЩЕСТВУЕТ - ПЫТАЕМСЯ ВОЙТИ
             if (password_verify($password, $user['password_hash'])) {
                 $_SESSION['user_id'] = $user['id'];
                 header('Location: index.php');
@@ -114,10 +72,33 @@ if ($stmt->fetchColumn() > 0) {
                 $error = 'Неверный пароль';
             }
         } else {
-            $error = 'Пользователь с таким логином не существует';
+            // ПОЛЬЗОВАТЕЛЯ НЕТ - РЕГИСТРИРУЕМ НОВОГО
+            $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
+            $stmt->execute([$login]);
+            
+            if ($stmt->fetchColumn() > 0) {
+                $error = 'Этот логин уже занят';
+            } else {
+                $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+                
+                try {
+                    $stmt = $db->prepare("INSERT INTO applications (login, password_hash, contract_agreed) VALUES (?, ?, 0)");
+                    $stmt->execute([$login, $passwordHash]);
+                    
+                    $userId = $db->lastInsertId();
+                    
+                    // Сохраняем логин и пароль для отображения
+                    $_SESSION['temp_login'] = $login;
+                    $_SESSION['temp_password'] = $password;
+                    $_SESSION['user_id'] = $userId;
+                    
+                    header('Location: index.php');
+                    exit();
+                } catch (PDOException $e) {
+                    $error = 'Ошибка регистрации: ' . $e->getMessage();
+                }
+            }
         }
-    } catch (PDOException $e) {
-        $error = 'Ошибка базы данных';
     }
 }
 ?>
