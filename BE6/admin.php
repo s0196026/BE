@@ -9,6 +9,10 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 $username = $_SERVER['PHP_AUTH_USER'];
 $password = $_SERVER['PHP_AUTH_PW'];
 
+$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
+
 // Проверка из БД
 $stmt = $db->prepare("SELECT * FROM admin_users WHERE username = ?");
 $stmt->execute([$username]);
