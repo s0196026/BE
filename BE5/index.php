@@ -232,6 +232,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 Выйти
             </a>
         </header>
+        <?php if ($showCredentials): ?>
+    <div class="success-message" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px; padding: 15px; margin-bottom: 20px;">
+        <strong>Регистрация успешна!</strong><br>
+        Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
+        Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
+    </div>
+<?php endif; ?>
 
         <?php if (isset($_COOKIE['error_db'])): ?>
             <div class="alert error">
