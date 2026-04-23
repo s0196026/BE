@@ -75,25 +75,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактирование пользователя</title>
     <style>
+        a{
+            color: green;
+        }
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
+            color: #4e1609;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #ffe9b0;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background: white;
+            background: #fcdea8;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
+            border-radius: 4px;
         }
         .form-group {
             margin-bottom: 15px;
@@ -113,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         textarea {
             min-height: 100px;
@@ -121,25 +120,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             height: auto;
             min-height: 150px;
         }
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #4361ee;
+        button {
+            background-color: #EC9311;
             color: white;
-            text-decoration: none;
-            border-radius: 4px;
+            padding: 10px 15px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
-        .btn:hover {
-            background-color: #3a56d4;
+        
+        button:hover {
+            background-color: #9cd8cc;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Редактирование пользователя #<?= $userId ?></h1>
-        <a href="admin.php">Назад к списку</a>
+        <a href="admin.php">Вернуться к списку</a>
 
         <form method="POST">
             <div class="form-group">
