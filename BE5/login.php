@@ -214,7 +214,7 @@ display: flex;
                 <label for="login">Логин:</label>
                 <div class="divinp">
                     <input type="text" id="login" name="login" value="<?= htmlspecialchars($login_value) ?>" required>
-                    <button type="submit" class="genbut">Сгенерировать логин</button>
+                    <button type="submit" name="generate_login" class="genbut">Сгенерировать логин</button>
                 </div>
             </div>
 
@@ -222,7 +222,7 @@ display: flex;
                 <label for="password">Пароль:</label>
                 <div class="divinp">
                     <input type="password" id="password" name="password" value="<?= htmlspecialchars($password_value) ?>" required>
-                    <button type="submit" class="genbut">Сгенерировать пароль</button>
+                    <button type="submit" name="generate_password" class="genbut">Сгенерировать пароль</button>
                 </div>
             </div>
 
