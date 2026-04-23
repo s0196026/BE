@@ -1,6 +1,25 @@
 <?php
 session_start();
 
+// Функция для генерации случайного логина
+function generateLogin() {
+    $adjectives = ['Fast', 'Smart', 'Cool', 'Happy', 'Bright', 'Clever', 'Wise', 'Brave', 'Calm', 'Lucky'];
+    $nouns = ['Coder', 'Dev', 'Programmer', 'Hacker', 'Master', 'Wizard', 'Ninja', 'Hero', 'Star', 'Ghost'];
+    $random = rand(100, 999);
+    
+    return $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)] . $random;
+}
+
+// Функция для генерации случайного пароля
+function generatePassword($length = 10) {
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+    $password = '';
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $chars[random_int(0, strlen($chars) - 1)];
+    }
+    return $password;
+}
+
 // уже авторизован - перенаправляем на главную
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
@@ -18,6 +37,45 @@ $debug_info = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $login = trim($_POST['login']);
     $password = trim($_POST['password']);
+
+    //-------------
+    if (empty($login)) {
+        $error = 'Введите логин';
+    } elseif (strlen($login) < 4) {
+        $error = 'Логин должен быть не менее 4 символов';
+    } elseif (empty($password)) {
+        $error = 'Введите пароль';
+    } elseif (strlen($password) < 6) {
+        $error = 'Пароль должен быть не менее 6 символов';
+    } else {
+        // проверка уникальности логина
+        $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
+        $stmt->execute([$login]);
+
+        if ($stmt->fetchColumn() > 0) {
+            $error = 'Этот логин уже занят';
+        } else {
+            // хеширование пароля
+            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+            try {
+                // фиксация аккаунта
+                $stmt = $db->prepare("INSERT INTO applications
+                    (login, password_hash, contract_agreed)
+                    VALUES (?, ?, 0)");
+
+                $stmt->execute([
+                    $login,
+                    $passwordHash
+                ]);
+
+                $success = true;
+            } catch (PDOException $e) {
+                $error = 'Ошибка регистрации: ' . $e->getMessage();
+            }
+        }
+    }
+    //-------------
 
     // отладочная информация
     $debug_info .= "Попытка входа: login='$login', password='$password'\n";
@@ -160,14 +218,19 @@ display: flex;
         <form method="POST">
             <div class="form-group">
                 <label for="login">Логин:</label>
-<div class="divinp"><input type="text" id="login" name="login" required>
-<button type="submit" class="genbut">Сгенерировать логин</button></div>
+                <div class="divinp">
+//-----------
+                    <input type="text" id="login" name="login" value="<?= isset($_COOKIE['error_fio']) ? 'error-field' : '' ?>" required>
+                    <button type="submit" class="genbut">Сгенерировать логин</button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="password">Пароль:</label>
-<div class="divinp"><input type="password" id="password" name="password" required>
-<button type="submit" class="genbut">Сгенерировать пароль</button></div>
+                <div class="divinp">
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit" class="genbut">Сгенерировать пароль</button>
+                </div>
             </div>
 
             <button type="submit">Войти</button>
