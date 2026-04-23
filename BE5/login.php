@@ -206,7 +206,7 @@ text-algin: center;
     <div class="login-container">
         <header>
             <h1>Вход в систему</h1>
-            <h3>Придумайте логин и пароль - регистрация пройдёт автоматически ;) </h3>
+            <h4>Придумайте логин и пароль - регистрация пройдёт автоматически ;) </h4>
         </header>
         <?php if ($error): ?>
             <div class="error"><?= htmlspecialchars($error) ?></div>
