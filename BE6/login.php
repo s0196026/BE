@@ -1,61 +1,105 @@
 <?php
 session_start();
 
-// Если уже авторизован - перенаправляем на главную
+// Функция для генерации случайного логина
+function generateLogin() {
+    $adjectives = ['Fast', 'Smart', 'Cool', 'Happy', 'Bright', 'Clever', 'Wise', 'Brave', 'Cool', 'Lucky'];
+    $nouns = ['Apple', 'Snow', 'Perfume', 'Goose', 'Cat', 'Sugar', 'Muse', 'Hero', 'Star', 'Ghost'];
+    $random = rand(100, 999);
+    
+    return $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)] . $random;
+}
+
+// Функция для генерации случайного пароля
+function generatePassword($length = 10) {
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+    $password = '';
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $chars[random_int(0, strlen($chars) - 1)];
+    }
+    return $password;
+}
+
+if (isset($_GET['ajax'])) {
+    header('Content-Type: application/json');
+    if ($_GET['ajax'] == 'login') {
+        echo json_encode(['value' => generateLogin()]);
+    } elseif ($_GET['ajax'] == 'password') {
+        echo json_encode(['value' => generatePassword()]);
+    }
+    exit();
+}
+
+// уже авторизован - перенаправляем на главную
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
 
-// Подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=u68775", 'u68775', '7631071', [
+// подключение к БД
+$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
 $error = '';
-$debug_info = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && !isset($_POST['generate_password'])) {
     $login = trim($_POST['login']);
     $password = trim($_POST['password']);
 
-    // Отладочная информация
-    $debug_info .= "Попытка входа: login='$login', password='$password'\n";
-
-    try {
-        // Ищем пользователя в БД
+    // ВАЛИДАЦИЯ
+    if (empty($login)) {
+        $error = 'Введите логин';
+    } elseif (strlen($login) < 4) {
+        $error = 'Логин должен быть не менее 4 символов';
+    } elseif (empty($password)) {
+        $error = 'Введите пароль';
+    } elseif (strlen($password) < 6) {
+        $error = 'Пароль должен быть не менее 6 символов';
+    } else {
+        // СНАЧАЛА ПРОВЕРЯЕМ - ЕСТЬ ЛИ ТАКОЙ ПОЛЬЗОВАТЕЛЬ?
         $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
         $stmt->execute([$login]);
         $user = $stmt->fetch();
-
+        
         if ($user) {
-            $debug_info .= "Найден пользователь: ID={$user['id']}\n";
-            $debug_info .= "Хэш из БД: {$user['password_hash']}\n";
-            $debug_info .= "Длина хэша: " . strlen($user['password_hash']) . " символов\n";
-
-            // Проверяем пароль
+            // ПОЛЬЗОВАТЕЛЬ СУЩЕСТВУЕТ - ПЫТАЕМСЯ ВОЙТИ
             if (password_verify($password, $user['password_hash'])) {
                 $_SESSION['user_id'] = $user['id'];
-                $debug_info .= "Пароль верный, авторизация успешна\n";
-
-                // Перенаправляем после успешного входа
                 header('Location: index.php');
                 exit();
             } else {
-                $debug_info .= "Ошибка: пароль не совпадает\n";
                 $error = 'Неверный пароль';
             }
         } else {
-            $debug_info .= "Ошибка: пользователь не найден\n";
-            $error = 'Пользователь с таким логином не существует';
+            // ПОЛЬЗОВАТЕЛЯ НЕТ - РЕГИСТРИРУЕМ НОВОГО
+            $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
+            $stmt->execute([$login]);
+            
+            if ($stmt->fetchColumn() > 0) {
+                $error = 'Этот логин уже занят';
+            } else {
+                $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+                
+                try {
+                    $stmt = $db->prepare("INSERT INTO applications (login, password_hash, contract_agreed) VALUES (?, ?, 0)");
+                    $stmt->execute([$login, $passwordHash]);
+                    
+                    $userId = $db->lastInsertId();
+                    
+                    // Сохраняем логин и пароль для отображения
+                    $_SESSION['temp_login'] = $login;
+                    $_SESSION['temp_password'] = $password;
+                    $_SESSION['user_id'] = $userId;
+                    
+                    header('Location: index.php');
+                    exit();
+                } catch (PDOException $e) {
+                    $error = 'Ошибка регистрации: ' . $e->getMessage();
+                }
+            }
         }
-    } catch (PDOException $e) {
-        $error = 'Ошибка базы данных';
-        $debug_info .= "Ошибка БД: " . $e->getMessage() . "\n";
     }
-
-    // Логируем отладочную информацию
-    error_log($debug_info);
 }
 ?>
 
@@ -67,9 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Вход в систему</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #ffe9b0;
             margin: 0;
+            color: #64400f;
             padding: 20px;
             display: flex;
             justify-content: center;
@@ -77,17 +121,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             height: 100vh;
         }
         .login-container {
-            background: white;
+            color: #4e1609;
+            background-color: #fcdea8;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
         }
         h1 {
             text-align: center;
             margin-bottom: 25px;
-            color: #333;
         }
         .form-group {
             margin-bottom: 20px;
@@ -96,7 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: #555;
         }
         input[type="text"],
         input[type="password"] {
@@ -110,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button {
             width: 100%;
             padding: 12px;
-            background-color: #4CAF50;
+            background-color: #EC9311;
             color: white;
             border: none;
             border-radius: 4px;
@@ -119,14 +161,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #9cd8cc;
         }
         .error {
-            color: #d32f2f;
+            border: 2px solid red;
+            border-radius: 4px;
+            color: red;
             margin: 15px 0;
             padding: 10px;
-            background-color: #fce4e4;
-            border-radius: 4px;
             text-align: center;
         }
         .register-link {
@@ -134,12 +176,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-top: 20px;
         }
         .register-link a {
-            color: #1976d2;
+            color: #8c4566;
             text-decoration: none;
         }
         .register-link a:hover {
             text-decoration: underline;
         }
+.genbut{
+margin-left: 10px;
+width: 320px;
+}
+.divinp{
+display: flex;
+            justify-content: space-between;
+            align-items: center;
+}
     </style>
 </head>
 <body>
@@ -153,20 +204,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST">
             <div class="form-group">
                 <label for="login">Логин:</label>
-                <input type="text" id="login" name="login" required>
+                <div class="divinp">
+                    <input type="text" id="login" name="login" required>
+                    <button type="button" class="genbut" onclick="generateField('login')">Сгенерировать логин</button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="password">Пароль:</label>
-                <input type="password" id="password" name="password" required>
+                <div class="divinp">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="genbut" onclick="generateField('password')">Сгенерировать пароль</button>
+                </div>
             </div>
 
             <button type="submit">Войти</button>
         </form>
-
-        <div class="register-link">
-            Нет аккаунта? <a href="register.php">Зарегистрируйтесь</a>
-        </div>
     </div>
+    <script>
+    function generateField(type) {
+        fetch('?ajax=' + type)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById(type).value = data.value;
+            });
+    }
+    </script>
 </body>
 </html>
