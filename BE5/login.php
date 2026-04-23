@@ -213,7 +213,7 @@ display: flex;
             <div class="form-group">
                 <label for="login">Логин:</label>
                 <div class="divinp">
-                    <input type="text" id="login" name="login" value="<?= htmlspecialchars($login_value) ?>" required>
+                    <input type="text" id="login" name="login" value="<?= htmlspecialchars($login_value) ?>">
                     <button type="submit" name="generate_login" class="genbut">Сгенерировать логин</button>
                 </div>
             </div>
@@ -221,7 +221,7 @@ display: flex;
             <div class="form-group">
                 <label for="password">Пароль:</label>
                 <div class="divinp">
-                    <input type="password" id="password" name="password" value="<?= htmlspecialchars($password_value) ?>" required>
+                    <input type="password" id="password" name="password" value="<?= htmlspecialchars($password_value) ?>">
                     <button type="submit" name="generate_password" class="genbut">Сгенерировать пароль</button>
                 </div>
             </div>
