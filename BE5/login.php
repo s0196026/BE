@@ -20,6 +20,16 @@ function generatePassword($length = 10) {
     return $password;
 }
 
+if (isset($_GET['ajax'])) {
+    header('Content-Type: application/json');
+    if ($_GET['ajax'] == 'login') {
+        echo json_encode(['value' => generateLogin()]);
+    } elseif ($_GET['ajax'] == 'password') {
+        echo json_encode(['value' => generatePassword()]);
+    }
+    exit();
+}
+
 // уже авторизован - перенаправляем на главную
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
@@ -32,18 +42,6 @@ $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
 ]);
 
 $error = '';
-$login_value = '';
-$password_value = '';
-
-// Обработка генерации логина
-if (isset($_POST['generate_login'])) {
-    $login_value = generateLogin();
-}
-
-// Обработка генерации пароля
-if (isset($_POST['generate_password'])) {
-    $password_value = generatePassword();
-}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && !isset($_POST['generate_password'])) {
     $login = trim($_POST['login']);
@@ -213,21 +211,30 @@ display: flex;
             <div class="form-group">
                 <label for="login">Логин:</label>
                 <div class="divinp">
-                    <input type="text" id="login" name="login" value="<?= htmlspecialchars($login_value) ?>">
-                    <button type="submit" name="generate_login" class="genbut">Сгенерировать логин</button>
+                    <input type="text" id="login" name="login" required>
+                    <button type="button" class="genbut" onclick="generateField('login')">Сгенерировать логин</button>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="password">Пароль:</label>
                 <div class="divinp">
-                    <input type="password" id="password" name="password" value="<?= htmlspecialchars($password_value) ?>">
-                    <button type="submit" name="generate_password" class="genbut">Сгенерировать пароль</button>
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="genbut" onclick="generateField('password')">Сгенерировать пароль</button>
                 </div>
             </div>
 
             <button type="submit">Войти</button>
         </form>
     </div>
+    <script>
+    function generateField(type) {
+        fetch('?ajax=' + type)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById(type).value = data.value;
+            });
+    }
+    </script>
 </body>
 </html>
