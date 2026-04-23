@@ -228,10 +228,6 @@ display: flex;
 
             <button type="submit">Войти</button>
         </form>
-
-        <div class="register-link">
-            Нет аккаунта? <a href="register.php">Зарегистрируйтесь</a>
-        </div>
     </div>
 </body>
 </html>
