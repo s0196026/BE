@@ -197,12 +197,17 @@ display: flex;
             justify-content: space-between;
             align-items: center;
 }
+        h3{
+text-algin: center;
+}
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>Вход в систему</h1>
-
+        <header>
+            <h1>Вход в систему</h1>
+            <h3>Придумайте логин и пароль - регистрация пройдёт автоматически ;) </h3>
+        </header>
         <?php if ($error): ?>
             <div class="error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
