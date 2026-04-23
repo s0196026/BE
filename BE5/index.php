@@ -233,13 +233,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </a>
         </header>
         <?php if ($showCredentials): ?>
-    <div class="success-reg">
+    <div class="success-reg" style="border: 4px solid #EC9311;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    font: 14pt;">
         <strong>Вы успешно зарегистрировались!</strong><br>
         Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
         Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
     </div>
 <?php endif; ?>
-
         <?php if (isset($_COOKIE['error_db'])): ?>
             <div class="alert error">
                 <?= htmlspecialchars($_COOKIE['error_db']) ?>
