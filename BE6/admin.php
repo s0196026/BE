@@ -295,7 +295,7 @@ $stats = $db->query("
             </div>
         <?php endif; ?>
 
-        <h2>Список пользователей</h2>
+        <h2>Список пользователей:</h2>
         <table class="admin-table">
             <thead>
                 <tr>
