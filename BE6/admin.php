@@ -23,15 +23,10 @@ if (!$admin || !password_verify($password, $admin['password_hash'])) {
 }
 
 // 1. Проверка авторизации
-if (!isset($_SESSION['admin_logged_in'])) {
+/*if (!isset($_SESSION['admin_logged_in'])) {
     header('Location: admin_login.php');
     exit();
 }
-
-// 2. Подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
 
 // 3. Обработка удаления
 if (isset($_GET['delete'])) {
@@ -56,7 +51,7 @@ $stats = $db->query("
     FROM programming_languages pl
     LEFT JOIN application_languages al ON pl.id = al.language_id
     GROUP BY pl.name
-")->fetchAll();
+")->fetchAll();*/
 ?>
 
 <!DOCTYPE html>
