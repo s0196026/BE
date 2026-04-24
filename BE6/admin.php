@@ -281,6 +281,23 @@ $stats = $db->query("
             <?php endforeach; ?>
         </div>
 
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <?php foreach ($stats as $stat): ?>
+                    <th> <h3><?= htmlspecialchars($stat['name']) ?></h3> </th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($stats as $stat): ?>
+                    <tr>
+                        <td> <div class="stat-value"><?= $stat['user_count'] ?></div> </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
         <?php if (isset($_GET['deleted'])): ?>
             <div class="alert success">
                 Пользователь успешно удален!
