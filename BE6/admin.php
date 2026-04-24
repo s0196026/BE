@@ -83,7 +83,7 @@ $stats = $db->query("
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -238,6 +238,7 @@ $stats = $db->query("
             font-weight: bold;
             color: var(--primary);
             margin: 5px 0;
+            text-align: center;
         }
 
         @media (max-width: 768px) {
@@ -271,7 +272,7 @@ $stats = $db->query("
         </header>
         
         <h2>Статистика по языкам:</h2>
-        <div class="stats-grid">
+        /*<div class="stats-grid">
             <?php foreach ($stats as $stat): ?>
                 <div class="stat-card">
                     <h3><?= htmlspecialchars($stat['name']) ?></h3>
@@ -279,7 +280,7 @@ $stats = $db->query("
                     <p> пользователей</p>
                 </div>
             <?php endforeach; ?>
-        </div>
+        </div>*/
 
         <table class="admin-table">
             <thead>
