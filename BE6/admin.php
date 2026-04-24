@@ -56,7 +56,6 @@ $stats = $db->query("
     FROM programming_languages pl
     LEFT JOIN application_languages al ON pl.id = al.language_id
     GROUP BY pl.name
-    //ORDER BY user_count DESC
 ")->fetchAll();
 ?>
 
