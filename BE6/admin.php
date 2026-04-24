@@ -42,7 +42,7 @@ if (isset($_GET['delete'])) {
         $db->rollBack();
         die("Ошибка при удалении: " . $e->getMessage());
     }
-}
+}*/
 
 // 4. Получение данных
 $users = $db->query("SELECT * FROM applications ORDER BY id")->fetchAll();
@@ -51,7 +51,7 @@ $stats = $db->query("
     FROM programming_languages pl
     LEFT JOIN application_languages al ON pl.id = al.language_id
     GROUP BY pl.name
-")->fetchAll();*/
+")->fetchAll();
 ?>
 
 <!DOCTYPE html>
