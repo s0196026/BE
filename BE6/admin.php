@@ -271,7 +271,7 @@ $stats = $db->query("
             </div>
         <?php endif; ?>
 
-        <h2>Статистика по языкам</h2>
+        <h2>Статистика по языкам:</h2>
         <div class="stats-grid">
             <?php foreach ($stats as $stat): ?>
                 <div class="stat-card">
