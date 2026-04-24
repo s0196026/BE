@@ -77,9 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <title>Редактирование пользователя</title>
     <style>
-        a{
-            color: green;
-        }
         body {
             margin: 0;
             color: #4e1609;
@@ -133,12 +130,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button:hover {
             background-color: #9cd8cc;
         }
+        .back{
+            color: green;
+            
+        }
+        header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Редактирование пользователя #<?= $userId ?></h1>
-        <a href="admin.php">Вернуться к списку</a>
+        <header>
+            <h1>Редактирование пользователя #<?= $userId ?></h1>
+            <div class="back"><a href="admin.php">Вернуться к списку</a></div>
+        </header>
 
         <form method="POST">
             <div class="form-group">
