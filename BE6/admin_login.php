@@ -6,16 +6,7 @@ $db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
-// Экстренный сброс пароля (доступен только по специальной ссылке)
-if (isset($_GET['emergency_reset'])) {
-    $new_hash = password_hash('admin123', PASSWORD_BCRYPT);
-    $stmt = $db->prepare("UPDATE admin_users SET password_hash = ? WHERE username = 'admin'");
-    $stmt->execute([$new_hash]);
-    die("Пароль сброшен. Новый пароль: admin123");
-}
-
 $error = '';
-//$attempts = $_SESSION['login_attempts'] ?? 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -45,8 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $error = 'Пользователь не найден';
     }
-
-    $_SESSION['login_attempts'] = ++$attempts;
 } 
 ?>
 
