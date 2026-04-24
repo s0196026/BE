@@ -120,7 +120,7 @@ $stats = $db->query("
         }
 
         .alert.success {
-            background-color: #EC9311;
+            background-color: green;
             color: white;
             font-weight: bold;
         }
@@ -253,6 +253,12 @@ $stats = $db->query("
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+        }
+        h3{
+            margin: 0;
+        }
+        p{
+            margin:0 ;
         }
     </style>
 </head>
