@@ -272,16 +272,6 @@ $stats = $db->query("
         </header>
         
         <h2>Статистика по языкам:</h2>
-        /*<div class="stats-grid">
-            <?php foreach ($stats as $stat): ?>
-                <div class="stat-card">
-                    <h3><?= htmlspecialchars($stat['name']) ?></h3>
-                    <div class="stat-value"><?= $stat['user_count'] ?></div>
-                    <p> пользователей</p>
-                </div>
-            <?php endforeach; ?>
-        </div>*/
-
         <table class="admin-table">
             <thead>
                 <tr>
