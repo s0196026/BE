@@ -132,7 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         .back{
             color: green;
-            
         }
         header{
             display: flex;
