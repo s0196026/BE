@@ -270,13 +270,7 @@ $stats = $db->query("
                 Выйти
             </a>
         </header>
-
-        <?php if (isset($_GET['deleted'])): ?>
-            <div class="alert success">
-                Пользователь успешно удален!
-            </div>
-        <?php endif; ?>
-
+        
         <h2>Статистика по языкам:</h2>
         <div class="stats-grid">
             <?php foreach ($stats as $stat): ?>
@@ -287,6 +281,12 @@ $stats = $db->query("
                 </div>
             <?php endforeach; ?>
         </div>
+
+        <?php if (isset($_GET['deleted'])): ?>
+            <div class="alert success">
+                Пользователь успешно удален!
+            </div>
+        <?php endif; ?>
 
         <h2>Список пользователей</h2>
         <table class="admin-table">
