@@ -29,7 +29,7 @@ if ($isFirstVisit) {
 }
 // перенаправление если не авторизован
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: navigation.php');
     exit();
 }
 
