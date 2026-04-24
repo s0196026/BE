@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход в систему</title>
+    <title>Вход пользователя</title>
     <style>
         body {
             background-color: #ffe9b0;
@@ -195,7 +195,7 @@ display: flex;
 </head>
 <body>
     <div class="login-container">
-        <h1>Вход в систему</h1>
+        <h1>Вход пользователя</h1>
 
         <?php if ($error): ?>
             <div class="error"><?= htmlspecialchars($error) ?></div>
