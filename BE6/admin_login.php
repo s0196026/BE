@@ -15,9 +15,9 @@ if (isset($_GET['emergency_reset'])) {
 }
 
 $error = '';
-$attempts = $_SESSION['login_attempts'] ?? 0;
+//$attempts = $_SESSION['login_attempts'] ?? 0;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
@@ -47,10 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
     }
 
     $_SESSION['login_attempts'] = ++$attempts;
-} elseif ($attempts >= 5) {
-    $error = 'Слишком много попыток. Попробуйте позже.';
-    sleep(5); // Замедление brute-force атак
-}
+} 
 ?>
 
 <!DOCTYPE html>
@@ -134,22 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
     <div class="login-container">
         <h1><i class="fas fa-lock"></i> Вход администратора</h1>
 
-        <?php if ($error): ?>
-            <div class="error">
-                <?= htmlspecialchars($error) ?>
-                <?php if ($attempts > 0): ?>
-                    <div style="margin-top: 0.5rem; font-size: 0.9rem;">
-                        Попыток: <?= $attempts ?> из 5
-                    </div>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($attempts >= 5): ?>
-            <div class="attempts-warning">
-                Превышено количество попыток. Подождите 5 минут.
-            </div>
-        <?php else: ?>
+        
             <form method="POST">
                 <div class="form-group">
                     <label for="username">Логин:</label>
@@ -166,16 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $attempts < 5) {
                     Войти
                 </button>
             </form>
-        <?php endif; ?>
-
-        <!-- Ссылка для экстренного сброса (должна быть удалена в продакшене) -->
-        <?php if (isset($_GET['debug'])): ?>
-            <div style="margin-top: 2rem; text-align: center; font-size: 0.8rem;">
-                <a href="admin_login.php?emergency_reset=1" style="color: var(--error);">
-                    Экстренный сброс пароля (admin123)
-                </a>
-            </div>
-        <?php endif; ?>
+        
     </div>
 </body>
 </html>
