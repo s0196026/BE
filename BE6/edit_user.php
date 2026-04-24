@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container">
         <header>
             <h1>Редактирование пользователя #<?= $userId ?></h1>
-            <div class="back"><a href="admin.php">Вернуться к списку</a></div>
+            <div class="back"><a href="admin.php" style="color:green;">Вернуться к списку</a></div>
         </header>
 
         <form method="POST">
