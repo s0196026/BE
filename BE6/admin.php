@@ -290,11 +290,11 @@ $stats = $db->query("
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($stats as $stat): ?>
-                    <tr>
+                <tr>
+                    <?php foreach ($stats as $stat): ?>
                         <td> <div class="stat-value"><?= $stat['user_count'] ?></div> </td>
-                    </tr>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </tr>
             </tbody>
         </table>
 
