@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 1rem;
         }
         button:hover {
-            background-color: #red;
+            background-color: #9cd8cc;
         }
         .error {
             color: var(--error);
