@@ -57,7 +57,7 @@
         <div class="divinp">
             <a href="login.php" class="btn">
             Войти как пользователь</a>
-        <a href="admin.php" class="btn">
+        <a href="admin_login.php" class="btn">
             Войти как администратор</a>   
         </div>
     </div>
