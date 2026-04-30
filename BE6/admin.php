@@ -315,7 +315,7 @@ $stats = $db->query("
                             <a href="edit_user.php?id=<?= $user['id'] ?>" class="action-btn edit-btn">
                                 Ред.
                             </a>
-                            <a href="admin.php?delete=<?= $user['id'] ?>" class="action-btn delete-btn" onclick="return confirm('Удалить этого пользователя?')">
+                            <a href="admin.php?delete=<?= $user['id'] ?>" class="action-btn delete-btn">
                                 Удал.
                             </a>
                         </td>
