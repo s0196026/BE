@@ -113,7 +113,6 @@ $stats = $db->query("
         }
 
         .alert.success {
-            margin-top: 5px;
             background-color: green;
             color: white;
             font-weight: bold;
