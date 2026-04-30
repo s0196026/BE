@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Функция для генерации случайного логина
+// генерация случайного логина
 function generateLogin() {
     $adjectives = ['Fast', 'Smart', 'Cool', 'Happy', 'Bright', 'Clever', 'Wise', 'Brave', 'Cool', 'Lucky'];
     $nouns = ['Apple', 'Snow', 'Perfume', 'Goose', 'Cat', 'Sugar', 'Muse', 'Hero', 'Star', 'Ghost'];
@@ -10,7 +10,7 @@ function generateLogin() {
     return $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)] . $random;
 }
 
-// Функция для генерации случайного пароля
+// генерация случайного пароля
 function generatePassword($length = 10) {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
     $password = '';
