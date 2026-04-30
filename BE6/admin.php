@@ -113,6 +113,7 @@ $stats = $db->query("
         }
 
         .alert.success {
+            margin-top: 5px;
             background-color: green;
             color: white;
             font-weight: bold;
@@ -168,7 +169,6 @@ $stats = $db->query("
             transform: translateY(-2px);
         }
 
-        /* Стили для админ-таблицы */
         .admin-table {
             width: 100%;
             border-collapse: collapse;
