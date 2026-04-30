@@ -23,7 +23,7 @@ if (!$admin || !password_verify($password, $admin['password_hash'])) {
 }
 
 // 1. Проверка авторизации
-/*if (!isset($_SESSION['admin_logged_in'])) {
+if (!isset($_SESSION['admin_logged_in'])) {
     header('Location: admin_login.php');
     exit();
 }
@@ -42,7 +42,7 @@ if (isset($_GET['delete'])) {
         $db->rollBack();
         die("Ошибка при удалении: " . $e->getMessage());
     }
-}*/
+}
 
 // 4. Получение данных
 $users = $db->query("SELECT * FROM applications ORDER BY id")->fetchAll();
