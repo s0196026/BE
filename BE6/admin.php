@@ -283,13 +283,14 @@ $stats = $db->query("
             </tbody>
         </table>
 
+        <h2>Список пользователей:</h2>
+        
         <?php if (isset($_GET['deleted'])): ?>
             <div class="alert success">
                 Пользователь успешно удален!
             </div>
         <?php endif; ?>
 
-        <h2>Список пользователей:</h2>
         <table class="admin-table">
             <thead>
                 <tr>
