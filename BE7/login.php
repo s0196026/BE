@@ -108,6 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' cdnjs.cloudflare.com; 
+               style-src 'self' 'unsafe-inline'">
     <title>Вход пользователя</title>
     <style>
         body {
