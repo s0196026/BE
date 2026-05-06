@@ -75,6 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' cdnjs.cloudflare.com; 
+               style-src 'self' 'unsafe-inline'">
     <title>Редактирование пользователя</title>
     <style>
         body {
