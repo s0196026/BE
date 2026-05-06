@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+   ini_set('display_errors', 0); 
 session_start();
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
     header('WWW-Authenticate: Basic realm="Admin Panel"');
@@ -40,7 +42,9 @@ if (isset($_GET['delete'])) {
         exit();
     } catch (PDOException $e) {
         $db->rollBack();
-        die("Ошибка при удалении: " . $e->getMessage());
+        error_log("Database error in admin.php: " . $e->getMessage());
+        error_log("Stack trace: " . $e->getTraceAsString());
+        die("Произошла ошибка. Администратор уведомлён.");
     }
 }
 
