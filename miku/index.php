@@ -23,6 +23,15 @@ if (isset($_SESSION['user_id'])) {
     $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $userData = $stmt->fetch();
+    if (!isset($_COOKIE['form_user_id']) || $_COOKIE['form_user_id'] != $_SESSION['user_id']) {
+        foreach (['fio', 'phone', 'email', 'com', 'contract'] as $field) {
+            if (isset($_COOKIE["form_$field"])) {
+                setcookie("form_$field", '', time() - 3600, '/');
+            }
+        }
+        // Сохраняем ID текущего пользователя в куки
+        setcookie('form_user_id', $_SESSION['user_id'], time() + 3600 * 24 * 30, '/');
+    }
 }
 
 $isFirstVisit = !isset($_COOKIE['form_initialized']);
