@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
         $error = 'Пароль должен быть не менее 6 символов';
     } else {
         // СНАЧАЛА ПРОВЕРЯЕМ - ЕСТЬ ЛИ ТАКОЙ ПОЛЬЗОВАТЕЛЬ?
-        $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
+        $stmt = $db->prepare("SELECT id, password_hash FROM appmiku WHERE login = ?");
         $stmt->execute([$login]);
         $user = $stmt->fetch();
         
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
             }
         } else {
             // ПОЛЬЗОВАТЕЛЯ НЕТ - РЕГИСТРИРУЕМ НОВОГО
-            $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
+            $stmt = $db->prepare("SELECT COUNT(*) FROM appmiku WHERE login = ?");
             $stmt->execute([$login]);
             
             if ($stmt->fetchColumn() > 0) {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
                 $passwordHash = password_hash($password, PASSWORD_BCRYPT);
                 
                 try {
-                    $stmt = $db->prepare("INSERT INTO applications (login, password_hash, contract_agreed) VALUES (?, ?, 0)");
+                    $stmt = $db->prepare("INSERT INTO appmiku (login, password_hash, contract_agreed) VALUES (?, ?, 0)");
                     $stmt->execute([$login, $passwordHash]);
                     
                     $userId = $db->lastInsertId();
