@@ -52,12 +52,12 @@ function setErrorCookie($name, $message) {
 function getFieldValue($fieldName, $userData, $dbFieldName = null) {
     $dbField = $dbFieldName ?: $fieldName;
     
-    // Если есть данные из БД и они не пустые - показываем их
+    // СНАЧАЛА проверяем данные из БД (если пользователь авторизован)
     if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null && $userData[$dbField] !== '') {
         return htmlspecialchars($userData[$dbField]);
     }
     
-    // Если данных из БД нет - показываем из кук
+    // ТОЛЬКО ПОТОМ проверяем куки
     if (isset($_COOKIE["form_$fieldName"])) {
         return htmlspecialchars($_COOKIE["form_$fieldName"]);
     }
@@ -421,7 +421,7 @@ color: #E12885;">
                     <br/>
                     <label>
                         <input type="checkbox" 
-                               name="check"
+                               name="contract"
                                id="check"
                                <?= (isset($_COOKIE['form_contract']) || (isset($userData['contract_agreed']) && $userData['contract_agreed'] == 1)) ? 'checked' : '' ?>/>
                         С политикой обработки персональных данных ознакомлен(-а)
