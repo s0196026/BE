@@ -14,26 +14,6 @@ if (isset($_SESSION['temp_login']) && isset($_SESSION['temp_password'])) {
     unset($_SESSION['temp_password']);
 }
 
-$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
-
-$userData = null;
-if (isset($_SESSION['user_id'])) {
-    $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $userData = $stmt->fetch();
-    if (!isset($_COOKIE['form_user_id']) || $_COOKIE['form_user_id'] != $_SESSION['user_id']) {
-        foreach (['fio', 'phone', 'email', 'com', 'contract'] as $field) {
-            if (isset($_COOKIE["form_$field"])) {
-                setcookie("form_$field", '', time() - 3600, '/');
-            }
-        }
-        // Сохраняем ID текущего пользователя в куки
-        setcookie('form_user_id', $_SESSION['user_id'], time() + 3600 * 24 * 30, '/');
-    }
-}
-
 $isFirstVisit = !isset($_COOKIE['form_initialized']);
 
 if ($isFirstVisit) {
@@ -42,7 +22,7 @@ if ($isFirstVisit) {
 
     // очистка ошибок
     foreach ($_COOKIE as $name => $value) {
-        if (strpos($name, 'error_') === 0) {
+        if (strpos($name, 'error_') === 0 || strpos($name, 'form_') === 0) {
             setcookie($name, '', time() - 3600, '/');
         }
     }
@@ -61,27 +41,28 @@ function setErrorCookie($name, $message) {
 function getFieldValue($fieldName, $userData, $dbFieldName = null) {
     $dbField = $dbFieldName ?: $fieldName;
     
-    // СНАЧАЛА проверяем данные из БД (если пользователь авторизован)
-    if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null && $userData[$dbField] !== '') {
-        return htmlspecialchars($userData[$dbField]);
-    }
-    
-    // ТОЛЬКО ПОТОМ проверяем куки
     if (isset($_COOKIE["form_$fieldName"])) {
         return htmlspecialchars($_COOKIE["form_$fieldName"]);
     }
     
+    if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null) {
+        return htmlspecialchars($userData[$dbField]);
+    }
     return '';
 }
 
+// подключение к БД
+$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 // очистка ошибок
-/*if (!isset($_GET['form_submitted'])) {
+if (!isset($_GET['form_submitted'])) {
     foreach ($_COOKIE as $name => $value) {
         if (strpos($name, 'error_') === 0) {
             setcookie($name, '', time() - 3600, '/');
         }
     }
-}*/
+}
 // загрузка данных пользователя
 $userData = null;
 if (isset($_SESSION['user_id'])) {
@@ -93,6 +74,7 @@ if (isset($_SESSION['user_id'])) {
 // обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
+    $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
     // валидация ФИО
     if (empty($_POST['fio'] ?? '')) {
@@ -124,12 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     setFormCookie('email', $_POST['email'] ?? '');
 
-    // валидация комментария
+    // валидация био
     if (empty($_POST['com'] ?? '')) {
         $errors['com'] = 'Заполните биографию';
-        setErrorCookie('com', $errors['com']);
+        setErrorCookie('bio', $errors['com']);
     }
-    setFormCookie('com', $_POST['com'] ?? '');
+    setFormCookie('bio', $_POST['com'] ?? '');
 
     // валидация чекбокса
     if (empty($_POST['contract'] ?? '')) {
@@ -148,24 +130,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $db->beginTransaction();
 
         // обновление основной информации
-        $stmt = $db->prepare("UPDATE appmiku SET
-            fio = ?, phone = ?, email = ?, com = ?, contract_agreed = ?
+        $stmt = $db->prepare("UPDATE applications SET
+            fio = ?, phone = ?, email = ?, birthdate = ?,
+            gender = ?, bio = ?, contract_agreed = ?
             WHERE id = ?");
 
         $stmt->execute([
             $_POST['fio'],
             $_POST['phone'],
             $_POST['email'],
-            $_POST['com'],
+            $_POST['birthdate'],
+            $_POST['gender'],
+            $_POST['bio'],
             isset($_POST['contract']) ? 1 : 0,
             $_SESSION['user_id']
         ]);
+
+        // обновление яп
+        $db->prepare("DELETE FROM application_languages WHERE application_id = ?")
+           ->execute([$_SESSION['user_id']]);
+
+        $stmt = $db->prepare("INSERT INTO application_languages (application_id, language_id)
+                            SELECT ?, id FROM programming_languages WHERE name = ?");
+        foreach ($languages as $lang) {
+            $stmt->execute([$_SESSION['user_id'], $lang]);
+        }
 
         $db->commit();
 
         // очистка куков после успешного сохранения
         foreach ($_COOKIE as $name => $value) {
-            if (strpos($name, 'error_') === 0) {
+            if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
                 setcookie($name, '', time() - 3600, '/');
             }
         }
@@ -181,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
+    
 <html>
     <head>
         <title>Голос интернета: Хатсунэ Мику</title>
