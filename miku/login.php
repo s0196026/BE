@@ -1,108 +1,3 @@
-<?php
-session_start();
-
-// Функция для генерации случайного логина
-function generateLogin() {
-    $adjectives = ['Fast', 'Smart', 'Cool', 'Happy', 'Bright', 'Clever', 'Wise', 'Brave', 'Cool', 'Lucky'];
-    $nouns = ['Apple', 'Snow', 'Perfume', 'Goose', 'Cat', 'Sugar', 'Muse', 'Hero', 'Star', 'Ghost'];
-    $random = rand(100, 999);
-    
-    return $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)] . $random;
-}
-
-// Функция для генерации случайного пароля
-function generatePassword($length = 10) {
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
-    $password = '';
-    for ($i = 0; $i < $length; $i++) {
-        $password .= $chars[random_int(0, strlen($chars) - 1)];
-    }
-    return $password;
-}
-
-if (isset($_GET['ajax'])) {
-    header('Content-Type: application/json');
-    if ($_GET['ajax'] == 'login') {
-        echo json_encode(['value' => generateLogin()]);
-    } elseif ($_GET['ajax'] == 'password') {
-        echo json_encode(['value' => generatePassword()]);
-    }
-    exit();
-}
-
-// уже авторизован - перенаправляем на главную
-if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit();
-}
-
-// подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
-
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && !isset($_POST['generate_password'])) {
-    $login = trim($_POST['login']);
-    $password = trim($_POST['password']);
-
-    // ВАЛИДАЦИЯ
-    if (empty($login)) {
-        $error = 'Введите логин';
-    } elseif (strlen($login) < 4) {
-        $error = 'Логин должен быть не менее 4 символов';
-    } elseif (empty($password)) {
-        $error = 'Введите пароль';
-    } elseif (strlen($password) < 6) {
-        $error = 'Пароль должен быть не менее 6 символов';
-    } else {
-        // СНАЧАЛА ПРОВЕРЯЕМ - ЕСТЬ ЛИ ТАКОЙ ПОЛЬЗОВАТЕЛЬ?
-        $stmt = $db->prepare("SELECT id, password_hash FROM applications WHERE login = ?");
-        $stmt->execute([$login]);
-        $user = $stmt->fetch();
-        
-        if ($user) {
-            // ПОЛЬЗОВАТЕЛЬ СУЩЕСТВУЕТ - ПЫТАЕМСЯ ВОЙТИ
-            if (password_verify($password, $user['password_hash'])) {
-                $_SESSION['user_id'] = $user['id'];
-                header('Location: index.php');
-                exit();
-            } else {
-                $error = 'Неверный пароль';
-            }
-        } else {
-            // ПОЛЬЗОВАТЕЛЯ НЕТ - РЕГИСТРИРУЕМ НОВОГО
-            $stmt = $db->prepare("SELECT COUNT(*) FROM applications WHERE login = ?");
-            $stmt->execute([$login]);
-            
-            if ($stmt->fetchColumn() > 0) {
-                $error = 'Этот логин уже занят';
-            } else {
-                $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-                
-                try {
-                    $stmt = $db->prepare("INSERT INTO applications (login, password_hash, contract_agreed) VALUES (?, ?, 0)");
-                    $stmt->execute([$login, $passwordHash]);
-                    
-                    $userId = $db->lastInsertId();
-                    
-                    // Сохраняем логин и пароль для отображения
-                    $_SESSION['temp_login'] = $login;
-                    $_SESSION['temp_password'] = $password;
-                    $_SESSION['user_id'] = $userId;
-                    
-                    header('Location: index.php');
-                    exit();
-                } catch (PDOException $e) {
-                    $error = 'Ошибка регистрации: ' . $e->getMessage();
-                }
-            }
-        }
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -111,9 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
     <title>Вход пользователя</title>
     <style>
         body {
-            background-color: #ffe9b0;
+            background-color: #7ACBDC;
             margin: 0;
-            color: #64400f;
             padding: 20px;
             display: flex;
             justify-content: center;
@@ -121,8 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
             height: 100vh;
         }
         .login-container {
-            color: #4e1609;
-            background-color: #fcdea8;
+            background-color: white;
             padding: 30px;
             border-radius: 8px;
             width: 100%;
@@ -152,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['generate_login']) && 
         button {
             width: 100%;
             padding: 12px;
-            background-color: #EC9311;
+            background-color: #E12885;
             color: white;
             border: none;
             border-radius: 4px;
