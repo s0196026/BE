@@ -22,7 +22,7 @@ if ($isFirstVisit) {
 
     // очистка ошибок
     foreach ($_COOKIE as $name => $value) {
-        if (strpos($name, 'error_') === 0 || strpos($name, 'form_') === 0) {
+        if (strpos($name, 'error_') === 0) {
             setcookie($name, '', time() - 3600, '/');
         }
     }
@@ -41,13 +41,16 @@ function setErrorCookie($name, $message) {
 function getFieldValue($fieldName, $userData, $dbFieldName = null) {
     $dbField = $dbFieldName ?: $fieldName;
     
+    // После успешного сохранения показываем данные из БД
+    if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null && $userData[$dbField] !== '') {
+        return htmlspecialchars($userData[$dbField]);
+    }
+    
+    // Если данных из БД нет — показываем из кук (например, после ошибки валидации)
     if (isset($_COOKIE["form_$fieldName"])) {
         return htmlspecialchars($_COOKIE["form_$fieldName"]);
     }
     
-    if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null) {
-        return htmlspecialchars($userData[$dbField]);
-    }
     return '';
 }
 
