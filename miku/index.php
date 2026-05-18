@@ -379,7 +379,7 @@ color: #E12885;">
                 <form class="CI form_border contw" id="comment" method="POST" action="index.php">
                     <label class="mt-3 mt-md-3">
                         <input name="fio"
-                               id="name"
+                               id="fio"
                                placeholder="Ваше имя"
                                value="<?= htmlspecialchars(getFieldValue('fio', $userData)) ?>"/>
                     </label>
@@ -421,7 +421,7 @@ color: #E12885;">
                     <br/>
                     <label>
                         <input type="checkbox" 
-                               name="contract"
+                               name="check"
                                id="check"
                                <?= (isset($_COOKIE['form_contract']) || (isset($userData['contract_agreed']) && $userData['contract_agreed'] == 1)) ? 'checked' : '' ?>/>
                         С политикой обработки персональных данных ознакомлен(-а)
