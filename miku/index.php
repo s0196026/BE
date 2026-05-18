@@ -37,6 +37,20 @@
                     </nav>
                 </div>
             </div>
+            
+            <?php if ($showCredentials): ?>
+    <div style="border: 2px solid white;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    font: 14pt;">
+        <strong>Вы успешно зарегистрировались!</strong><br>
+        Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
+        Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
+    </div>
+<?php endif; ?>
+
             <video autoplay muted loop playsinline poster="poster.jpg">
                 <source src="miku_pics\to_head.mp4" type="video/mp4">
             </video>
