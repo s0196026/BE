@@ -350,38 +350,69 @@ color: #E12885;">
                 </div>
             </div>
         </div>
-        <footer class="clearfix">
+                <footer class="clearfix">
             <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
             <div class="ms-md-5 contw">
                 <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
-                <form class="CI form_border contw" id="comment" >
-                    <label class="mt-3 mt-md-3"><input name ="name"
-                                  id ="name"
-                                  placeholder ="Ваше имя"/>
-                    </label> <br/>
-                    <label>
-                        <input name ="tel"
-                               id ="tel"
+                <form class="CI form_border contw" id="comment" method="POST" action="index.php" novalidate>
+                    <input type="hidden" name="form_submitted" value="1">
+                    <label class="mt-3 mt-md-3">ФИО<br/>
+                        <input name="fio"
+                               id="fio"
+                               placeholder="Ваше имя"
+                               value="<?= getFieldValue('fio', $userData) ?>"/>
+                    </label>
+                    <?php if (isset($_COOKIE['error_fio'])): ?>
+                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
+                    <?php endif; ?>
+                    <br/>
+                    <label>Телефон<br/>
+                        <input name="phone"
+                               id="phone"
                                type="tel"
-                               placeholder ="Ваш телефон"/>
-                    </label> <br/>
-                    <label>
+                               placeholder="Ваш телефон"
+                               value="<?= getFieldValue('phone', $userData) ?>"/>
+                    </label>
+                    <?php if (isset($_COOKIE['error_phone'])): ?>
+                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
+                    <?php endif; ?>
+                    <br/>
+                    <label>E-mail<br/>
                         <input name="email"
                                id="email"
-                               type ="email"
-                               placeholder ="E-mail"/>
-                    </label><br/>
-                    <label>
-                        <input name ="message"
-                               id ="message"
-                               placeholder ="Ваш комментарий"/>
-                    </label> <br/>
+                               type="email"
+                               placeholder="E-mail"
+                               value="<?= getFieldValue('email', $userData) ?>"/>
+                    </label>
+                    <?php if (isset($_COOKIE['error_email'])): ?>
+                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_email']) ?></div>
+                    <?php endif; ?>
+                    <br/>
+                    <label>Биография<br/>
+                        <textarea name="bio"
+                                  id="bio"
+                                  placeholder="Ваш комментарий"><?= getFieldValue('bio', $userData) ?></textarea>
+                    </label>
+                    <?php if (isset($_COOKIE['error_bio'])): ?>
+                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_bio']) ?></div>
+                    <?php endif; ?>
+                    <br/>
                     <label>
                         <input type="checkbox" 
-                               name="check"
-                               id="check"/>
+                               name="contract"
+                               id="contract"
+                               value="1"
+                               <?= (isset($_COOKIE['form_contract']) || ($userData && $userData['contract_agreed'])) ? 'checked' : '' ?>/>
                         С политикой обработки персональных данных ознакомлен(-а)
-                    </label><br/>
+                    </label>
+                    <?php if (isset($_COOKIE['error_contract'])): ?>
+                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
+                    <?php endif; ?>
+                    <br/>
+
+                    <?php if (isset($_COOKIE['error_db'])): ?>
+                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_db']) ?></div>
+                    <?php endif; ?>
 
                     <input class="DGO button" type="submit" value="Отправить!"/>
                 </form>
