@@ -64,9 +64,12 @@ if (!isset($_GET['form_submitted'])) {
     }
 }
 // загрузка данных пользователя
-$stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$userData = $stmt->fetch();
+$userData = null;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $userData = $stmt->fetch();
+}
 
 // обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
