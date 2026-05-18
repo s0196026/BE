@@ -189,9 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 background-color: #fff0f0;
             }
             .success-message {
-                background-color: #d4edda;
-                color: #155724;
-                border: 1px solid #c3e6cb;
+                color: #E12885;
+                border: 1px solid #E12885;
                 border-radius: 4px;
                 padding: 10px;
                 margin-bottom: 20px;
@@ -233,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     max-width: 500px;
                     background-color: rgba(225, 40, 133, 0.1);
                     color: #E12885;">
-                    <strong>✓ Вы успешно зарегистрировались!</strong><br>
+                    <strong>Вы успешно зарегистрировались!</strong><br>
                     Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
                     Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
                 </div>
@@ -241,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
                 <div class="success-message" style="margin: 20px auto; max-width: 600px;">
-                    ✓ Ваше сообщение успешно отправлено!
+                    Ваше сообщение успешно отправлено!
                 </div>
             <?php endif; ?>
 
