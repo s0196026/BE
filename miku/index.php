@@ -65,7 +65,7 @@ if (!isset($_GET['form_submitted'])) {
 }
 // загрузка данных пользователя
 $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_SESSION['id']]);
 $userData = $stmt->fetch();
 
 // обработка отправки формы
