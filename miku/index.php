@@ -28,6 +28,7 @@
                             </select>
                         </label>
                         <p class="CI"><a href="#form">Поделитесь мнением!</a></p>
+                        <p class="CI"><b>Войти</b></p>
                     </nav>
                 </div>
             </div>
