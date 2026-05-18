@@ -190,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             .success-message {
                 color: #E12885;
-                background-color: #ffe9b0;
+                background-color: #B0FFE9;
                 border: 1px solid #E12885;
                 border-radius: 4px;
                 padding: 10px;
