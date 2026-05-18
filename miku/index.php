@@ -71,7 +71,6 @@ $userData = $stmt->fetch();
 // обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
-    $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
 
     // валидация ФИО
     if (empty($_POST['fio'] ?? '')) {
@@ -207,7 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     padding: 15px;
     margin-bottom: 20px;
     text-align: center;
-    font: 14pt;">
+    font: 14pt;
+color: #E12885;">
         <strong>Вы успешно зарегистрировались!</strong><br>
         Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
         Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
