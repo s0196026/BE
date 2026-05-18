@@ -123,8 +123,6 @@ footer form{
 }
 footer input {
     width: 100%;
-    padding: 8px;
-    border-radius: 4px;
     box-sizing: border-box;
 }
 footer .contw{
