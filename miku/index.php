@@ -103,11 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     setFormCookie('email', $_POST['email'] ?? '');
 
     // валидация комментария
-    if (empty($_POST['bio'] ?? '')) {
-        $errors['bio'] = 'Заполните биографию';
-        setErrorCookie('bio', $errors['bio']);
+    if (empty($_POST['com'] ?? '')) {
+        $errors['com'] = 'Заполните биографию';
+        setErrorCookie('com', $errors['com']);
     }
-    setFormCookie('bio', $_POST['bio'] ?? '');
+    setFormCookie('com', $_POST['com'] ?? '');
 
     // валидация чекбокса
     if (empty($_POST['contract'] ?? '')) {
@@ -397,13 +397,13 @@ color: #E12885;">
                     <?php endif; ?>
                     <br/>
                     <label>
-                        <input name="bio"
-                               id="message"
+                        <input name="com"
+                               id="com"
                                placeholder="Ваш комментарий"
-                               value="<?= htmlspecialchars(getFieldValue('bio', $userData)) ?>"/>
+                               value="<?= htmlspecialchars(getFieldValue('com', $userData)) ?>"/>
                     </label>
-                    <?php if (isset($_COOKIE['error_bio'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_bio']) ?></div>
+                    <?php if (isset($_COOKIE['error_com'])): ?>
+                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_com']) ?></div>
                     <?php endif; ?>
                     <br/>
                     <label>
