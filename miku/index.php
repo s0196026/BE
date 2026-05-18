@@ -393,7 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
     <div class="ms-md-5 contw">
         <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
-        <form class="CI form_border contw" id="comment" method="post" action="index.php" novalidate>
+        <form class="CI form_border contw " id="comment" method="post" action="index.php" novalidate>
             <label class="mt-3 mt-md-3">
                 <input name="fio"
                        id="fio"
@@ -424,11 +424,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php endif; ?>
             </label><br/>
             <label>
-                <textarea name="bio"
-                          id="bio"
-                          placeholder="Ваш комментарий"><?= getFieldValue('bio', $userData, 'com') ?></textarea>
-                <?php if (isset($_COOKIE['error_bio'])): ?>
-                    <span class="error-message"><?= htmlspecialchars($_COOKIE['error_bio']) ?></span>
+                <textarea name="com"
+                          id="com"
+                          placeholder="Ваш комментарий"><?= getFieldValue('com', $userData, 'com') ?></textarea>
+                <?php if (isset($_COOKIE['error_com'])): ?>
+                    <span class="error-message"><?= htmlspecialchars($_COOKIE['error_com']) ?></span>
                 <?php endif; ?>
             </label> <br/>
             <label>
