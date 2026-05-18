@@ -354,69 +354,34 @@ color: #E12885;">
             <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
             <div class="ms-md-5 contw">
                 <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
-                <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-                    <div class="CI" style="color: #E12885; margin-bottom: 15px;">Данные успешно сохранены!</div>
-                <?php endif; ?>
-                <?php
-                $db_error = isset($_COOKIE['error_db']) ? htmlspecialchars($_COOKIE['error_db']) : '';
-                if ($db_error):
-                ?>
-                    <div class="CI" style="color: red; margin-bottom: 15px;"><?= $db_error ?></div>
-                <?php endif; ?>
-                <form class="CI form_border contw" id="comment" method="POST" action="index.php">
-                    <label class="mt-3 mt-md-3">
-                        <input name="fio"
-                               id="name"
-                               placeholder="Ваше имя"
-                               value="<?= htmlspecialchars(getFieldValue('fio', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_fio'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
-                    <?php endif; ?>
-                    <br/>
+                <form class="CI form_border contw" id="comment" >
+                    <label class="mt-3 mt-md-3"><input name ="name"
+                                  id ="name"
+                                  placeholder ="Ваше имя"/>
+                    </label> <br/>
                     <label>
-                        <input name="phone"
-                               id="tel"
+                        <input name ="tel"
+                               id ="tel"
                                type="tel"
-                               placeholder="Ваш телефон"
-                               value="<?= htmlspecialchars(getFieldValue('phone', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_phone'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
-                    <?php endif; ?>
-                    <br/>
+                               placeholder ="Ваш телефон"/>
+                    </label> <br/>
                     <label>
                         <input name="email"
                                id="email"
-                               type="email"
-                               placeholder="E-mail"
-                               value="<?= htmlspecialchars(getFieldValue('email', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_email'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_email']) ?></div>
-                    <?php endif; ?>
-                    <br/>
+                               type ="email"
+                               placeholder ="E-mail"/>
+                    </label><br/>
                     <label>
-                        <input name="bio"
-                               id="message"
-                               placeholder="Ваш комментарий"
-                               value="<?= htmlspecialchars(getFieldValue('bio', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_bio'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_bio']) ?></div>
-                    <?php endif; ?>
-                    <br/>
+                        <input name ="message"
+                               id ="message"
+                               placeholder ="Ваш комментарий"/>
+                    </label> <br/>
                     <label>
                         <input type="checkbox" 
-                               name="contract"
-                               id="check"
-                               <?= (isset($_COOKIE['form_contract']) || (isset($userData['contract_agreed']) && $userData['contract_agreed'] == 1)) ? 'checked' : '' ?>/>
+                               name="check"
+                               id="check"/>
                         С политикой обработки персональных данных ознакомлен(-а)
-                    </label>
-                    <?php if (isset($_COOKIE['error_contract'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
-                    <?php endif; ?>
-                    <br/>
+                    </label><br/>
 
                     <input class="DGO button" type="submit" value="Отправить!"/>
                 </form>
