@@ -122,6 +122,7 @@ footer form{
     align-items: center;
 }
 footer .contw{
+    box-sizing: content-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
