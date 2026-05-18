@@ -14,6 +14,17 @@ if (isset($_SESSION['temp_login']) && isset($_SESSION['temp_password'])) {
     unset($_SESSION['temp_password']);
 }
 
+$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
+
+$userData = null;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $userData = $stmt->fetch();
+}
+
 $isFirstVisit = !isset($_COOKIE['form_initialized']);
 
 if ($isFirstVisit) {
@@ -41,12 +52,12 @@ function setErrorCookie($name, $message) {
 function getFieldValue($fieldName, $userData, $dbFieldName = null) {
     $dbField = $dbFieldName ?: $fieldName;
     
-    // После успешного сохранения показываем данные из БД
+    // Если есть данные из БД и они не пустые - показываем их
     if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null && $userData[$dbField] !== '') {
         return htmlspecialchars($userData[$dbField]);
     }
     
-    // Если данных из БД нет — показываем из кук (например, после ошибки валидации)
+    // Если данных из БД нет - показываем из кук
     if (isset($_COOKIE["form_$fieldName"])) {
         return htmlspecialchars($_COOKIE["form_$fieldName"]);
     }
@@ -54,18 +65,14 @@ function getFieldValue($fieldName, $userData, $dbFieldName = null) {
     return '';
 }
 
-// подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
 // очистка ошибок
-if (!isset($_GET['form_submitted'])) {
+/*if (!isset($_GET['form_submitted'])) {
     foreach ($_COOKIE as $name => $value) {
         if (strpos($name, 'error_') === 0) {
             setcookie($name, '', time() - 3600, '/');
         }
     }
-}
+}*/
 // загрузка данных пользователя
 $userData = null;
 if (isset($_SESSION['user_id'])) {
