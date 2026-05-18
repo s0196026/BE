@@ -1,3 +1,5 @@
+добавь в html код всё что нужно для валидации
+после следующего логиина под тем же пользователем значение полей должны оставаться
 <?php
 session_start();
 
@@ -64,12 +66,9 @@ if (!isset($_GET['form_submitted'])) {
     }
 }
 // загрузка данных пользователя
-$userData = null;
-if (isset($_SESSION['user_id'])) {
-    $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $userData = $stmt->fetch();
-}
+$stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$userData = $stmt->fetch();
 
 // обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -106,11 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     setFormCookie('email', $_POST['email'] ?? '');
 
     // валидация комментария
-    if (empty($_POST['com'] ?? '')) {
-        $errors['com'] = 'Заполните комментарий';
-        setErrorCookie('com', $errors['com']);
+    if (empty($_POST['bio'] ?? '')) {
+        $errors['bio'] = 'Заполните биографию';
+        setErrorCookie('bio', $errors['bio']);
     }
-    setFormCookie('com', $_POST['com'] ?? '');
+    setFormCookie('bio', $_POST['bio'] ?? '');
 
     // валидация чекбокса
     if (empty($_POST['contract'] ?? '')) {
@@ -120,16 +119,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // ошибки - редирект
     if (!empty($errors)) {
-        header('Location: index.php?form_submitted=1');
-        exit();
-    }
+    header('Location: index.php?form_submitted=1');
+    exit();
+}
 
     // ошибок нет - сохраняем в БД
     try {
         $db->beginTransaction();
 
         // обновление основной информации
-        $stmt = $db->prepare("UPDATE appmiku SET
+        $stmt = $db->prepare("UPDATE applications SET
             fio = ?, phone = ?, email = ?, com = ?, contract_agreed = ?
             WHERE id = ?");
 
@@ -176,27 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
         <link rel="stylesheet" href="style.css">
-        
-        <style>
-            .error-message {
-                color: #ff6b6b;
-                font-size: 12px;
-                margin-top: 5px;
-                display: block;
-            }
-            .form-control.error {
-                border-color: #ff6b6b;
-                background-color: #fff0f0;
-            }
-            .success-message {
-                color: #E12885;
-                background-color: #B0FFE9;
-                border: 1px solid #E12885;
-                border-radius: 4px;
-                padding: 10px;
-                margin-bottom: 20px;
-            }
-        </style>
     </head>
     <body>
         <header class="video-header">
@@ -225,28 +203,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             
             <?php if ($showCredentials): ?>
-                <div style="border: 2px solid #E12885;
-                    border-radius: 4px;
-                    padding: 15px;
-                    margin: 20px auto;
-                    text-align: center;
-                    max-width: 500px;
-                    background-color: rgba(225, 40, 133, 0.1);
-                    color: #E12885;">
-                    <strong>Вы успешно зарегистрировались!</strong><br>
-                    Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
-                    Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-                <div class="success-message" style="margin: 20px auto; max-width: 600px;">
-                    Ваше сообщение успешно отправлено!
-                </div>
-            <?php endif; ?>
+    <div style="border: 2px solid white;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    font: 14pt;
+color: #E12885;">
+        <strong>Вы успешно зарегистрировались!</strong><br>
+        Ваш логин: <strong><?= htmlspecialchars($tempLogin) ?></strong><br>
+        Ваш пароль: <strong><?= htmlspecialchars($tempPassword) ?></strong>
+    </div>
+<?php endif; ?>
 
             <video autoplay muted loop playsinline poster="poster.jpg">
-                <source src="miku_pics/to_head.mp4" type="video/mp4">
+                <source src="miku_pics\to_head.mp4" type="video/mp4">
             </video>
             
             <div class="header-title">
@@ -254,7 +225,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <h1 class="DGO">Хатсунэ Мику</h1>
             </div>
         </header>
-        
         <nav class="mt-4 m-auto linksong nav-mob info">
             <p class="CI"><a href="#VOCALOID">VOCALOID</a></p>
             <p class="CI"><a href="#POP">Самые популярные песни Мику</a></p>
@@ -268,7 +238,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </label>
             <p class="CI"><a href="#form">Поделитесь мнением!</a></p>
         </nav>
-        
         <div class="container-fluid">
             <div class="row">
                 <div class="offset-md-2 col-md-8">
@@ -279,70 +248,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         Существует множество различных вокалоидов, поющих на японском языке. Начиная с VOCALOID3 официально поддерживаются корейский, испанский и китайский языки. Начиная с VOCALOID6 стали поддерживаться голосовые банки с ИИ.
                     </div>
                 </div>
-                
                 <h3 id="POP" class="DGO d-flex justify-content-center mt-3 mb-3">Самые популярные песни Мику</h3>
                 <div class="col-md">
                     <div class="slider cover linksong linkInf">
                         <div class="m-2">
-                            <img class="border" src="miku_pics/1_world-is_mine.png" alt="обложка песни World is mine!">
+                            <img class="border" src="miku_pics\1_world-is_mine.png" alt="обложка песни <<World is mine!>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=EuJ6UR_pD5s">ryo - World is Mine ft. Hatsune Miku</a></h4> <p class="CI">31 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/2_rolling_girl.png" alt="обложка песни Rolling girl">
+                            <img class="border" src="miku_pics\2_rolling_girl.png" alt="обложка песни <<Rolling girl>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=vnw8zURAxkU">wowaka - Rollin Girl ft. Hatsune Miku</a></h4> <p class="CI">37 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/3_popipo.png" alt="обложка песни PoPiPo">
+                            <img class="border" src="miku_pics\3_popipo.png" alt="обложка песни <<PoPiPo>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=TNf3GPizM58">Lamazw-P - PoPiPo ft. Hatsune Miku</a></h4> <p class="CI">40 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/4_Even_Though_I_Loved_You.png" alt="обложка песни Even Though I Loved You">
+                            <img class="border" src="miku_pics\4_Even_Though_I_Loved_You.png" alt="обложка песни <<Even Though I Loved You>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=R_g0M5Zmqhg">MARETU - Even Though I Loved You ft. Hatsune Miku</a></h4> <p class="CI">42 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/5_Anonymous_M.png" alt="обложка песни Anonymous M">
+                            <img class="border" src="miku_pics\5_Anonymous_M.png" alt="обложка песни <<Anonymous M>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=yiqEEL7ac6M">PinocchioP - Anonymous M ft. Hatsune Miku</a></h4> <p class="CI">48 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/6_Romeo_and_Cinderella.png" alt="обложка песни Romeo and Cinderella">
+                            <img class="border" src="miku_pics\6_Romeo_and_Cinderella.png" alt="обложка песни <<Romeo and Cinderella>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=swqbfMh467A">doriko - Romeo and Cinderella ft. Hatsune Miku</a></h4> <p class="CI">49 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/7_Unknown_Mother-Goose.png" alt="обложка песни Unknown Mother-Goose">
+                            <img class="border" src="miku_pics\7_Unknown_Mother-Goose.png" alt="обложка песни <<Unknown Mother-Goose>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=P_CSdxSGfaA">wowaka - Unknown Mother-Goose ft. Hatsune Miku</a></h4> <p class="CI">71 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/8_miku.png" alt="обложка песни Miku">
+                            <img class="border" src="miku_pics\8_miku.png" alt="обложка песни <<Miku>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=NocXEwsJGOQ">Anamanaguchi - Miku ft. Hatsune Miku</a></h4> <p class="CI">73 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/9_Thousands_of_Cherry_Trees.png" alt="обложка песни Thousands of Cherry Trees">
+                            <img class="border" src="miku_pics\9_Thousands_of_Cherry_Trees.png" alt="обложка песни <<Thousands of Cherry Trees>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=shs0rAiwsGQ">WhiteFlame -Thousands of Cherry Trees ft. Hatsune Miku</a></h4> <p class="CI">76 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/10_God-ish.png" alt="обложка песни God-ish">
+                            <img class="border" src="miku_pics\10_God-ish.png" alt="обложка песни <<God-ish>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=EHBFKhLUVig">PINOCCHIOP - God-ish ft. Hatsune Miku</a></h4> <p class="CI">87 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/11_The_Vampire.png" alt="обложка песни The Vampire">
+                            <img class="border" src="miku_pics\11_The_Vampire.png" alt="обложка песни <<The Vampire>>">
                             <h4 class="CI"><a href="https://www.youtube.com/watch?v=e1xCOsgWG0M">DECO*27 - The Vampire ft. Hatsune Miku</a></h4> <p class="CI">92 million views</p>
                         </div>
                         <div class="m-2">
-                            <img class="border" src="miku_pics/12_Rabbit_Hole.png" alt="обложка песни Rabbit Hole">
-                            <h4 class="CI"><a href="https://www.youtube.com/watch?v=eSW2LVbPThw">DECO*27 - Rabbit Hole ft. Hatsune Miku</a></h4> <p class="CI">105 million views</p>
+                            <img class="border" src="miku_pics\12_Rabbit_Hole.png" alt="обложка песни <<Rabbit Hole>>">
+                            <h4 class="CI"><a href="https://www.youtube.com/watch?v=eSW2LVbPThw">DECO*27 - Rabbit Hole ft. Hatsune Miku</a></h4> <p class="CI   ">105 million views</p>
                         </div>
                     </div>
                 </div>
-                
                 <div class="offset-md-6 p-0">
-                    <img src="miku_pics/Ofclboxart_cfm_Hatsune_Miku-illu (1).png" class="About_pic-md d-none d-md-block forPic1" alt="изначальный дизайн">
+                    <img src="miku_pics\Ofclboxart_cfm_Hatsune_Miku-illu (1).png" class="About_pic-md d-none d-md-block forPic1" alt="изначальный дизайн">
                 </div>
-                
                 <h3 class="mt-5 DGO d-flex justify-content-center About_content p-md-0">О Хатсунэ Мику</h3>
-                
                 <div class="offset-md-2 col-md-5 About_content">
                     <h4 id="market" class="MFMG">маркетинг <br>и продвижение</h4>
-                    <img src="miku_pics/textback.png" width="580" height="1000" class="About_pic-md d-none d-md-block" alt="">
+                    <img src="miku_pics\textback.png" width="580" height="1000" class="About_pic-md d-none d-md-block" alt="">
                     <div class="CI info">
                         Успех её голосовой библиотеки привёл к расширению маркетинговых возможностей, основная массовая рекламная кампания после её первоначального релиза как реакция на популярность.<br>
                         Мику всё ещё продолжает использоваться в качестве основного источника маркетинга для Crypton Future Media.<br><br>
@@ -351,14 +316,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 
-                <img src="miku_pics/Ofclboxart_cfm_Hatsune_Miku-illu.png" class="About_pic d-block d-md-none p-0" alt="изначальный дизайн">
+                <img src="miku_pics\Ofclboxart_cfm_Hatsune_Miku-illu.png" class="About_pic d-block d-md-none p-0" alt="изначальный дизайн">
                 <div class="p-0">
-                    <img src="miku_pics/Img_hatsune_miku_v2_02 (1).png" class="About_pic-md d-none d-md-block forPic2" alt="изначальный дизайн2">
+                    <img src="miku_pics\Img_hatsune_miku_v2_02 (1).png" class="About_pic-md d-none d-md-block forPic2" alt="изначальный дизайн2">
                 </div>
-                
                 <div class="offset-md-5 col-md-5 About_content tab p-md-0">
-                    <h4 id="impact" class="MFMG">влияние на индустрию</h4>
-                    <img src="miku_pics/textback2.png" width="580" height="1000" class="About_pic-md d-none d-md-block" alt="">
+                    <h4 id="impact" class="MFMG">влияение на индустрию</h4>
+                    <img src="miku_pics\textback2.png"  width="580" height="1000" class="About_pic-md d-none d-md-block" alt="">
                     <div class="CI info">
                         Популярность Хацунэ Мику оказала значительное влияние на разработку других вокальных библиотек Crypton Future Media. Из-за огромного спроса на её голосовой банк и образ персонажа компания иногда не справлялась с объёмами заказов.<br><br>
 
@@ -368,93 +332,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         В 2014 году рост продаж товаров, связанных с VOCALOID, на 19,2% (что эквивалентно 8,7 млрд иен или 73,8 млн долларов США), в основном был обусловлен выходом Хацунэ Мику V3.
                     </div>
                 </div>
-                <img src="miku_pics/Img_hatsune_miku_v2_02.png" class="About_pic d-block d-md-none p-0" alt="изначальный дизайн2">
+                <img src="miku_pics\Img_hatsune_miku_v2_02.png" class="About_pic d-block d-md-none p-0" alt="изначальный дизайн2">
                 
                 <div class="tab offset-md-2 col-md-8 About_content p-md-0">
                     <h4 id="culimpact" class="MFMG">культурное влияние</h4>
                     <div class="CI info">
                         В 2012 году был проведён опрос, посвящённый Олимпийским играм в Лондоне, в котором людей спрашивали, какого певца или группу они хотели бы увидеть на Олимпиаде. Мику заняла первое место, опередив таких известных исполнителей, как Леди Гага и Джастин Бибер. Опрос не был официальным и проводился исключительно для изучения популярности.<br>
                         Когда в 2011 году в Японии произошло цунами, Мику была выбрана как персонаж, который поможет представлять Японию. Это произошло из-за того, насколько распространённым стал её образ, и того, что многие молодые люди знали, кто она такая.<br>
-                        В выпуске "Орёл и решка: Токио" 2014 года ведущая отправляется на фестиваль в образе Хатсунэ Мику, как в "узнаваемом для Японии образе".
+                        В выпуске "Орёл и решка: Токио" 2014 года ведущая отправляется на фесиваль в образе Хетсунэ Мику, как в “узнаваемом для Японии образе”.
                     </div>
                     <div class="mt-md-2 col-12 p-0">
-                        <img class="float-start me-md-3 About_pic_third1" src="miku_pics/Рекламный плакат мероприятия.png" alt="Рекламный плакат мероприятия">
-                        <div class="CI info">С 6 мая по 3 июня 2014 года Хацунэ Мику открывала концерты поп-певицы Леди Гаги в США и выступала в течение 25 минут с двумя бэк-вокалистами.</div>
+                        <img class="float-start me-md-3 About_pic_third1" src="miku_pics\Рекламный плакат мероприятия.png" alt="Рекламный плакат мероприятия">
+                        <div class="CI info ">С 6 мая по 3 июня 2014 года Хацунэ Мику открывала концерты поп-певицы Леди Гаги в США и выступала в течение 25 минут с двумя бэк-вокалистами.</div>
                     </div><br><br>
                     <div class="mt-md-2 col-12 p-0">
-                        <img class="float-end ms-md-3 About_pic_third2" src="miku_pics/гоночная машина Good Smile Racing 2008BMW Z4 E86.png" alt="гоночная машина Good Smile Racing 2008BMW Z4 E86">
-                        <div class="CI info">Мику стала талисманом команды по автоспорту Studie GLAD Racing. Узнаваемый бренд — это автомобиль с изображением «Hatsune Miku Racing Ver.» или просто «Racing Miku».</div>
+                        <img class="float-end ms-md-3 About_pic_third2" src="miku_pics\гоночная машина Good Smile Racing 2008BMW Z4 E86.png" alt="гоночная машина Good Smile Racing 2008BMW Z4 E86">
+                        <div class="CI info ">Мику стала талисманом команды по автоспорту Studie GLAD Racing  Узнаваемый бренд — это автомобиль с изображением «Hatsune Miku Racing Ver.» или просто «Racing Miku».</div>
                     </div>
                 </div>
             </div>
         </div>
-        
-         <footer class="clearfix">
-    <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
-    <div class="ms-md-5 contw">
-        <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
-        <form class="CI form_border contw " id="comment" method="post" action="index.php" novalidate>
-            <label class="mt-3 mt-md-3">
-                <input name="fio"
-                       id="fio"
-                       value="<?= getFieldValue('fio', $userData) ?>"
-                       placeholder="Ваше имя"/>
-                <?php if (isset($_COOKIE['error_fio'])): ?>
-                    <span class="error-message"><?= htmlspecialchars($_COOKIE['error_fio']) ?></span>
-                <?php endif; ?>
-            </label> <br/>
-            <label>
-                <input name="phone"
-                       id="phone"
-                       type="tel"
-                       value="<?= getFieldValue('phone', $userData) ?>"
-                       placeholder="Ваш телефон"/>
-                <?php if (isset($_COOKIE['error_phone'])): ?>
-                    <span class="error-message"><?= htmlspecialchars($_COOKIE['error_phone']) ?></span>
-                <?php endif; ?>
-            </label> <br/>
-            <label>
-                <input name="email"
-                       id="email"
-                       type="email"
-                       value="<?= getFieldValue('email', $userData) ?>"
-                       placeholder="E-mail"/>
-                <?php if (isset($_COOKIE['error_email'])): ?>
-                    <span class="error-message"><?= htmlspecialchars($_COOKIE['error_email']) ?></span>
-                <?php endif; ?>
-            </label><br/>
-            <label>
-                <textarea name="com"
-                          id="com"
-                          placeholder="Ваш комментарий"><?= getFieldValue('com', $userData, 'com') ?></textarea>
-                <?php if (isset($_COOKIE['error_com'])): ?>
-                    <span class="error-message"><?= htmlspecialchars($_COOKIE['error_com']) ?></span>
-                <?php endif; ?>
-            </label> <br/>
-            <label>
-                <input type="checkbox"
-                       name="contract"
-                       id="contract"
-                       value="1"
-                       <?= (getFieldValue('contract', $userData, 'contract_agreed') == '1') ? 'checked' : '' ?>/>
-                С политикой обработки персональных данных ознакомлен(-а)
-            </label>
-            <?php if (isset($_COOKIE['error_contract'])): ?>
-                <br/><span class="error-message"><?= htmlspecialchars($_COOKIE['error_contract']) ?></span>
-            <?php endif; ?>
-            <br/>
+        <footer class="clearfix">
+            <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
+            <div class="ms-md-5 contw">
+                <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
+                <form class="CI form_border contw" id="comment" >
+                    <label class="mt-3 mt-md-3"><input name ="name"
+                                  id ="name"
+                                  placeholder ="Ваше имя"/>
+                    </label> <br/>
+                    <label>
+                        <input name ="tel"
+                               id ="tel"
+                               type="tel"
+                               placeholder ="Ваш телефон"/>
+                    </label> <br/>
+                    <label>
+                        <input name="email"
+                               id="email"
+                               type ="email"
+                               placeholder ="E-mail"/>
+                    </label><br/>
+                    <label>
+                        <input name ="message"
+                               id ="message"
+                               placeholder ="Ваш комментарий"/>
+                    </label> <br/>
+                    <label>
+                        <input type="checkbox" 
+                               name="check"
+                               id="check"/>
+                        С политикой обработки персональных данных ознакомлен(-а)
+                    </label><br/>
 
-            <?php if (isset($_COOKIE['error_db'])): ?>
-                <div class="error-message"><?= htmlspecialchars($_COOKIE['error_db']) ?></div>
-            <?php endif; ?>
-            <?php if (isset($_GET['success'])): ?>
-                <div class="success-message">Данные успешно сохранены!</div>
-            <?php endif; ?>
-
-            <input class="DGO button" type="submit" value="Отправить!"/>
-        </form>
-    </div>
-</footer>
+                    <input class="DGO button" type="submit" value="Отправить!"/>
+                </form>
+            </div>
+        </footer>
         
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="newjavascript.js"></script>
