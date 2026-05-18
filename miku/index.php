@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $db->beginTransaction();
 
         // обновление основной информации
-        $stmt = $db->prepare("UPDATE applications SET
+        $stmt = $db->prepare("UPDATE appmiku SET
             fio = ?, phone = ?, email = ?, com = ?, contract_agreed = ?
             WHERE id = ?");
 
