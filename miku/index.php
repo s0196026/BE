@@ -350,75 +350,78 @@ color: #E12885;">
                 </div>
             </div>
         </div>
-                <footer class="clearfix">
+        <footer class="clearfix">
             <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
             <div class="ms-md-5 contw">
                 <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
-                <form class="CI form_border contw" id="comment" method="POST" action="index.php" novalidate>
-                    <input type="hidden" name="form_submitted" value="1">
-                    <label class="mt-3 mt-md-3">ФИО<br/>
+                <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+                    <div class="CI" style="color: #E12885; margin-bottom: 15px;">Данные успешно сохранены!</div>
+                <?php endif; ?>
+                <?php
+                $db_error = isset($_COOKIE['error_db']) ? htmlspecialchars($_COOKIE['error_db']) : '';
+                if ($db_error):
+                ?>
+                    <div class="CI" style="color: red; margin-bottom: 15px;"><?= $db_error ?></div>
+                <?php endif; ?>
+                <form class="CI form_border contw" id="comment" method="POST" action="index.php">
+                    <label class="mt-3 mt-md-3">
                         <input name="fio"
-                               id="fio"
+                               id="name"
                                placeholder="Ваше имя"
-                               value="<?= getFieldValue('fio', $userData) ?>"/>
+                               value="<?= htmlspecialchars(getFieldValue('fio', $userData)) ?>"/>
                     </label>
                     <?php if (isset($_COOKIE['error_fio'])): ?>
-                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
+                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
                     <?php endif; ?>
                     <br/>
-                    <label>Телефон<br/>
+                    <label>
                         <input name="phone"
-                               id="phone"
+                               id="tel"
                                type="tel"
                                placeholder="Ваш телефон"
-                               value="<?= getFieldValue('phone', $userData) ?>"/>
+                               value="<?= htmlspecialchars(getFieldValue('phone', $userData)) ?>"/>
                     </label>
                     <?php if (isset($_COOKIE['error_phone'])): ?>
-                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
+                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
                     <?php endif; ?>
                     <br/>
-                    <label>E-mail<br/>
+                    <label>
                         <input name="email"
                                id="email"
                                type="email"
                                placeholder="E-mail"
-                               value="<?= getFieldValue('email', $userData) ?>"/>
+                               value="<?= htmlspecialchars(getFieldValue('email', $userData)) ?>"/>
                     </label>
                     <?php if (isset($_COOKIE['error_email'])): ?>
-                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_email']) ?></div>
+                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_email']) ?></div>
                     <?php endif; ?>
                     <br/>
-                    <label>Биография<br/>
-                        <textarea name="bio"
-                                  id="bio"
-                                  placeholder="Ваш комментарий"><?= getFieldValue('bio', $userData) ?></textarea>
+                    <label>
+                        <input name="bio"
+                               id="message"
+                               placeholder="Ваш комментарий"
+                               value="<?= htmlspecialchars(getFieldValue('bio', $userData)) ?>"/>
                     </label>
                     <?php if (isset($_COOKIE['error_bio'])): ?>
-                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_bio']) ?></div>
+                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_bio']) ?></div>
                     <?php endif; ?>
                     <br/>
                     <label>
                         <input type="checkbox" 
                                name="contract"
-                               id="contract"
-                               value="1"
-                               <?= (isset($_COOKIE['form_contract']) || ($userData && $userData['contract_agreed'])) ? 'checked' : '' ?>/>
+                               id="check"
+                               <?= (isset($_COOKIE['form_contract']) || (isset($userData['contract_agreed']) && $userData['contract_agreed'] == 1)) ? 'checked' : '' ?>/>
                         С политикой обработки персональных данных ознакомлен(-а)
                     </label>
                     <?php if (isset($_COOKIE['error_contract'])): ?>
-                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
+                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
                     <?php endif; ?>
                     <br/>
-
-                    <?php if (isset($_COOKIE['error_db'])): ?>
-                        <div class="error-message"><?= htmlspecialchars($_COOKIE['error_db']) ?></div>
-                    <?php endif; ?>
 
                     <input class="DGO button" type="submit" value="Отправить!"/>
                 </form>
             </div>
         </footer>
-        
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="newjavascript.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
