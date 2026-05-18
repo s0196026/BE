@@ -28,7 +28,7 @@
                             </select>
                         </label>
                         <p class="CI"><a href="#form">Поделитесь мнением!</a></p>
-                        <?php if (!isset($_SESSION['user_id']): ?>
+                        <?php if (!isset($_SESSION['user_id'])): ?>
                             <p class="CI"><b><a href="login.php">Войти</a></b></p>
                         <?php endif; ?>
                         <?php if (isset($_SESSION['user_id'])): ?>
