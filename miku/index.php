@@ -1,69 +1,13 @@
 <?php
 session_start();
 
-$showCredentials = false;
-$tempLogin = '';
-$tempPassword = '';
-
-if (isset($_SESSION['temp_login']) && isset($_SESSION['temp_password'])) {
-    $showCredentials = true;
-    $tempLogin = $_SESSION['temp_login'];
-    $tempPassword = $_SESSION['temp_password'];
-    // Удаляем из сессии, чтобы не показывать при следующем входе
-    unset($_SESSION['temp_login']);
-    unset($_SESSION['temp_password']);
-}
-
-$isFirstVisit = !isset($_COOKIE['form_initialized']);
-
-if ($isFirstVisit) {
-    // кука, что форма уже посещалась
-    setcookie('form_initialized', '1', time() + 3600 * 24 * 30, '/'); // на 30 дней
-
-    // очистка ошибок
-    foreach ($_COOKIE as $name => $value) {
-        if (strpos($name, 'error_') === 0 || strpos($name, 'form_') === 0) {
-            setcookie($name, '', time() - 3600, '/');
-        }
-    }
-}
-
-// функции для работы с cookies
-function setFormCookie($name, $value, $expire = 0) {
-    setcookie("form_$name", $value, $expire, '/');
-}
-
-function setErrorCookie($name, $message) {
-    setcookie("error_$name", $message, 0, '/');
-}
-
-// заполнение значений полей
-function getFieldValue($fieldName, $userData, $dbFieldName = null) {
-    $dbField = $dbFieldName ?: $fieldName;
-    
-    if (isset($_COOKIE["form_$fieldName"])) {
-        return htmlspecialchars($_COOKIE["form_$fieldName"]);
-    }
-    
-    if ($userData && isset($userData[$dbField]) && $userData[$dbField] !== null) {
-        return htmlspecialchars($userData[$dbField]);
-    }
-    return '';
-}
-
-// подключение к БД
-$db = new PDO("mysql:host=localhost;dbname=u82388", 'u82388', '5768002', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+// Подключение к БД
+$db = new PDO("mysql:host=localhost;dbname=u82388;charset=utf8", 'u82388', '5768002', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
-// очистка ошибок
-if (!isset($_GET['form_submitted'])) {
-    foreach ($_COOKIE as $name => $value) {
-        if (strpos($name, 'error_') === 0) {
-            setcookie($name, '', time() - 3600, '/');
-        }
-    }
-}
-// загрузка данных пользователя
+
+// Загрузка данных пользователя из БД
 $userData = null;
 if (isset($_SESSION['user_id'])) {
     $stmt = $db->prepare("SELECT * FROM appmiku WHERE id = ?");
@@ -71,108 +15,95 @@ if (isset($_SESSION['user_id'])) {
     $userData = $stmt->fetch();
 }
 
-// обработка отправки формы
+// Обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
-    $allowedLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala', 'Go'];
-
-    // валидация ФИО
-    if (empty($_POST['fio'] ?? '')) {
+    
+    // Валидация
+    $fio = trim($_POST['fio'] ?? '');
+    if (empty($fio)) {
         $errors['fio'] = 'Заполните ФИО';
-        setErrorCookie('fio', $errors['fio']);
-    } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s]+$/u', $_POST['fio'])) {
+    } elseif (!preg_match('/^[а-яА-ЯёЁa-zA-Z\s\-]+$/u', $fio)) {
         $errors['fio'] = 'Допустимы только буквы и пробелы';
-        setErrorCookie('fio', $errors['fio']);
     }
-    setFormCookie('fio', $_POST['fio'] ?? '');
-
-    // валидация телефона
-    if (empty($_POST['phone'] ?? '')) {
+    setcookie('form_fio', $fio, time() + 3600, '/');
+    
+    $phone = trim($_POST['phone'] ?? '');
+    if (empty($phone)) {
         $errors['phone'] = 'Заполните телефон';
-        setErrorCookie('phone', $errors['phone']);
-    } elseif (!preg_match('/^\+?\d{10,15}$/', $_POST['phone'])) {
-        $errors['phone'] = 'От 10 до 15 цифр, можно с +';
-        setErrorCookie('phone', $errors['phone']);
+    } elseif (!preg_match('/^\+?\d{10,15}$/', $phone)) {
+        $errors['phone'] = 'От 10 до 15 цифр';
     }
-    setFormCookie('phone', $_POST['phone'] ?? '');
-
-    // валидация email
-    if (empty($_POST['email'] ?? '')) {
+    setcookie('form_phone', $phone, time() + 3600, '/');
+    
+    $email = trim($_POST['email'] ?? '');
+    if (empty($email)) {
         $errors['email'] = 'Заполните email';
-        setErrorCookie('email', $errors['email']);
-    } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Некорректный email';
-        setErrorCookie('email', $errors['email']);
     }
-    setFormCookie('email', $_POST['email'] ?? '');
-
-    // валидация био
-    if (empty($_POST['com'] ?? '')) {
+    setcookie('form_email', $email, time() + 3600, '/');
+    
+    $com = trim($_POST['com'] ?? '');
+    if (empty($com)) {
         $errors['com'] = 'Заполните биографию';
-        setErrorCookie('bio', $errors['com']);
     }
-    setFormCookie('bio', $_POST['com'] ?? '');
-
-    // валидация чекбокса
-    if (empty($_POST['contract'] ?? '')) {
+    setcookie('form_com', $com, time() + 3600, '/');
+    
+    $contract = isset($_POST['contract']) ? 1 : 0;
+    setcookie('form_contract', $contract, time() + 3600, '/');
+    if (!$contract) {
         $errors['contract'] = 'Необходимо согласие';
-        setErrorCookie('contract', $errors['contract']);
     }
-
-    // ошибки - редирект
-    if (!empty($errors)) {
-    header('Location: index.php?form_submitted=1');
+    
+    // Сохраняем ошибки в куки
+    foreach ($errors as $key => $msg) {
+        setcookie("error_$key", $msg, time() + 3600, '/');
+    }
+    
+    // Если ошибок нет - сохраняем в БД
+    if (empty($errors) && isset($_SESSION['user_id'])) {
+        // Очищаем старые ошибки
+        foreach (['fio', 'phone', 'email', 'com', 'contract'] as $field) {
+            setcookie("error_$field", '', time() - 3600, '/');
+        }
+        
+        // Сохраняем в БД
+        $stmt = $db->prepare("UPDATE appmiku SET fio=?, phone=?, email=?, com=?, contract_agreed=? WHERE id=?");
+        $stmt->execute([$fio, $phone, $email, $com, $contract, $_SESSION['user_id']]);
+        
+        // Очищаем куки формы
+        foreach (['fio', 'phone', 'email', 'com', 'contract'] as $field) {
+            setcookie("form_$field", '', time() - 3600, '/');
+        }
+        
+        setcookie('success', '1', time() + 3600, '/');
+        header('Location: index.php');
+        exit();
+    }
+    
+    header('Location: index.php');
     exit();
 }
 
-    // ошибок нет - сохраняем в БД
-    try {
-        $db->beginTransaction();
+// Функция получения значения поля
+function getFieldValue($fieldName, $userData) {
+    if (isset($_COOKIE["form_$fieldName"])) {
+        return htmlspecialchars($_COOKIE["form_$fieldName"]);
+    }
+    if ($userData && isset($userData[$fieldName])) {
+        return htmlspecialchars($userData[$fieldName]);
+    }
+    return '';
+}
 
-        // обновление основной информации
-        $stmt = $db->prepare("UPDATE applications SET
-            fio = ?, phone = ?, email = ?, birthdate = ?,
-            gender = ?, bio = ?, contract_agreed = ?
-            WHERE id = ?");
-
-        $stmt->execute([
-            $_POST['fio'],
-            $_POST['phone'],
-            $_POST['email'],
-            $_POST['birthdate'],
-            $_POST['gender'],
-            $_POST['bio'],
-            isset($_POST['contract']) ? 1 : 0,
-            $_SESSION['user_id']
-        ]);
-
-        // обновление яп
-        $db->prepare("DELETE FROM application_languages WHERE application_id = ?")
-           ->execute([$_SESSION['user_id']]);
-
-        $stmt = $db->prepare("INSERT INTO application_languages (application_id, language_id)
-                            SELECT ?, id FROM programming_languages WHERE name = ?");
-        foreach ($languages as $lang) {
-            $stmt->execute([$_SESSION['user_id'], $lang]);
+// Очистка старых кук при первом заходе
+if (!isset($_COOKIE['visited'])) {
+    setcookie('visited', '1', time() + 86400 * 30, '/');
+    foreach ($_COOKIE as $name => $value) {
+        if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0 || $name === 'success') {
+            setcookie($name, '', time() - 3600, '/');
         }
-
-        $db->commit();
-
-        // очистка куков после успешного сохранения
-        foreach ($_COOKIE as $name => $value) {
-            if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
-                setcookie($name, '', time() - 3600, '/');
-            }
-        }
-
-        header('Location: index.php?success=1');
-        exit();
-
-    } catch (PDOException $e) {
-        $db->rollBack();
-        setErrorCookie('db', 'Ошибка сохранения: '.$e->getMessage());
-        header('Location: index.php');
-        exit();
     }
 }
 ?>
@@ -368,77 +299,77 @@ color: #E12885;">
             </div>
         </div>
         <footer class="clearfix">
-            <img src="miku_pics\Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
-            <div class="ms-md-5 contw">
-                <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
-                <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-                    <div class="CI" style="color: #E12885; margin-bottom: 15px;">Данные успешно сохранены!</div>
+        <img src="miku_pics/Illu_KEI_Vocaloid_Hatsune_Miku-img4.png" class="ms-md-5 me-md-5 formimg" alt="чиби дизайн">
+        <div class="ms-md-5 contw">
+            <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
+            
+            <?php if (isset($_COOKIE['success'])): ?>
+                <div class="CI" style="color: #E12885; margin-bottom: 15px;">Данные успешно сохранены!</div>
+                <?php setcookie('success', '', time() - 3600, '/'); ?>
+            <?php endif; ?>
+            
+            <form class="CI form_border contw" id="comment" method="POST" action="index.php">
+                <label class="mt-3 mt-md-3">
+                    <input name="fio" id="fio" placeholder="Ваше имя"
+                           value="<?= getFieldValue('fio', $userData) ?>"/>
+                </label>
+                <?php if (isset($_COOKIE['error_fio'])): ?>
+                    <div class="CI" style="color: red; font-size: 12px;">
+                        <?= htmlspecialchars($_COOKIE['error_fio']) ?>
+                    </div>
                 <?php endif; ?>
-                <?php
-                $db_error = isset($_COOKIE['error_db']) ? htmlspecialchars($_COOKIE['error_db']) : '';
-                if ($db_error):
-                ?>
-                    <div class="CI" style="color: red; margin-bottom: 15px;"><?= $db_error ?></div>
+                <br/>
+                
+                <label>
+                    <input name="phone" id="tel" type="tel" placeholder="Ваш телефон"
+                           value="<?= getFieldValue('phone', $userData) ?>"/>
+                </label>
+                <?php if (isset($_COOKIE['error_phone'])): ?>
+                    <div class="CI" style="color: red; font-size: 12px;">
+                        <?= htmlspecialchars($_COOKIE['error_phone']) ?>
+                    </div>
                 <?php endif; ?>
-                <form class="CI form_border contw" id="comment" method="POST" action="index.php">
-                    <label class="mt-3 mt-md-3">
-                        <input name="fio"
-                               id="fio"
-                               placeholder="Ваше имя"
-                               value="<?= htmlspecialchars(getFieldValue('fio', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_fio'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_fio']) ?></div>
-                    <?php endif; ?>
-                    <br/>
-                    <label>
-                        <input name="phone"
-                               id="tel"
-                               type="tel"
-                               placeholder="Ваш телефон"
-                               value="<?= htmlspecialchars(getFieldValue('phone', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_phone'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_phone']) ?></div>
-                    <?php endif; ?>
-                    <br/>
-                    <label>
-                        <input name="email"
-                               id="email"
-                               type="email"
-                               placeholder="E-mail"
-                               value="<?= htmlspecialchars(getFieldValue('email', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_email'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_email']) ?></div>
-                    <?php endif; ?>
-                    <br/>
-                    <label>
-                        <input name="com"
-                               id="com"
-                               placeholder="Ваш комментарий"
-                               value="<?= htmlspecialchars(getFieldValue('com', $userData)) ?>"/>
-                    </label>
-                    <?php if (isset($_COOKIE['error_com'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_com']) ?></div>
-                    <?php endif; ?>
-                    <br/>
-                    <label>
-                        <input type="checkbox" 
-                               name="contract"
-                               id="check"
-                               <?= (isset($_COOKIE['form_contract']) || (isset($userData['contract_agreed']) && $userData['contract_agreed'] == 1)) ? 'checked' : '' ?>/>
-                        С политикой обработки персональных данных ознакомлен(-а)
-                    </label>
-                    <?php if (isset($_COOKIE['error_contract'])): ?>
-                        <div class="CI" style="color: red; font-size: 12px;"><?= htmlspecialchars($_COOKIE['error_contract']) ?></div>
-                    <?php endif; ?>
-                    <br/>
-
-                    <input class="DGO button" type="submit" value="Отправить!"/>
-                </form>
-            </div>
-        </footer>
+                <br/>
+                
+                <label>
+                    <input name="email" id="email" type="email" placeholder="E-mail"
+                           value="<?= getFieldValue('email', $userData) ?>"/>
+                </label>
+                <?php if (isset($_COOKIE['error_email'])): ?>
+                    <div class="CI" style="color: red; font-size: 12px;">
+                        <?= htmlspecialchars($_COOKIE['error_email']) ?>
+                    </div>
+                <?php endif; ?>
+                <br/>
+                
+                <label>
+                    <input name="com" id="com" placeholder="Ваш комментарий"
+                           value="<?= getFieldValue('com', $userData) ?>"/>
+                </label>
+                <?php if (isset($_COOKIE['error_com'])): ?>
+                    <div class="CI" style="color: red; font-size: 12px;">
+                        <?= htmlspecialchars($_COOKIE['error_com']) ?>
+                    </div>
+                <?php endif; ?>
+                <br/>
+                
+                <label>
+                    <input type="checkbox" name="contract" id="check"
+                           <?= (isset($_COOKIE['form_contract']) && $_COOKIE['form_contract'] == 1) || 
+                               (!isset($_COOKIE['form_contract']) && isset($userData['contract_agreed']) && $userData['contract_agreed'] == 1) ? 'checked' : '' ?>/>
+                    С политикой обработки персональных данных ознакомлен(-а)
+                </label>
+                <?php if (isset($_COOKIE['error_contract'])): ?>
+                    <div class="CI" style="color: red; font-size: 12px;">
+                        <?= htmlspecialchars($_COOKIE['error_contract']) ?>
+                    </div>
+                <?php endif; ?>
+                <br/>
+                
+                <input class="DGO button" type="submit" value="Отправить!"/>
+            </form>
+        </div>
+    </footer>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="newjavascript.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
