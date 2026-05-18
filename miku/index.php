@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+$showCredentials = false;
+$tempLogin = '';
+$tempPassword = '';
+
 // Подключение к БД
 $db = new PDO("mysql:host=localhost;dbname=u82388;charset=utf8", 'u82388', '5768002', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
