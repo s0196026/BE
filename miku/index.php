@@ -19,7 +19,6 @@ if (isset($_SESSION['user_id'])) {
     $userData = $stmt->fetch();
 }
 
- $showSuccess = false;
 // Обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
@@ -82,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             setcookie("form_$field", '', time() - 3600, '/');
         }
 
-        $showSuccess = true;
         setcookie('success', '1', time() + 3600, '/');
         header('Location: index.php');
         exit();
@@ -90,6 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     header('Location: index.php');
     exit();
+}
+$showSuccess = false;
+if (isset($_COOKIE['success'])) {
+    $showSuccess = true;
+    setcookie('success', '', time() - 3600, '/');
 }
 
 // Функция получения значения поля
