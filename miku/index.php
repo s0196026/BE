@@ -82,11 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         setcookie('success', '1', time() + 3600, '/');
-        header('Location: index.php');
+        header('Location: index.php#form');
         exit();
     }
     
-    header('Location: index.php');
+    header('Location: index.php#form');
     exit();
 }
 $showSuccess = false;
