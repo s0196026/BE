@@ -1,5 +1,13 @@
 <?php
 session_start();
+if (isset($_SESSION['temp_login']) && isset($_SESSION['temp_password'])) {
+    $showCredentials = true;
+    $tempLogin = $_SESSION['temp_login'];
+    $tempPassword = $_SESSION['temp_password'];
+    // Удаляем, чтобы не показывать повторно
+    unset($_SESSION['temp_login']);
+    unset($_SESSION['temp_password']);
+}
 
 $showCredentials = false;
 $tempLogin = '';
