@@ -19,6 +19,7 @@ if (isset($_SESSION['user_id'])) {
     $userData = $stmt->fetch();
 }
 
+ $showSuccess = false;
 // Обработка отправки формы
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
@@ -80,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         foreach (['fio', 'phone', 'email', 'com', 'contract'] as $field) {
             setcookie("form_$field", '', time() - 3600, '/');
         }
-        
+
+        $showSuccess = true;
         setcookie('success', '1', time() + 3600, '/');
         header('Location: index.php');
         exit();
