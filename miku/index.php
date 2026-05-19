@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+$showCredentials = false;
+$tempLogin = '';
+$tempPassword = '';
+
 if (isset($_SESSION['temp_login']) && isset($_SESSION['temp_password'])) {
     $showCredentials = true;
     $tempLogin = $_SESSION['temp_login'];
@@ -8,10 +13,6 @@ if (isset($_SESSION['temp_login']) && isset($_SESSION['temp_password'])) {
     unset($_SESSION['temp_login']);
     unset($_SESSION['temp_password']);
 }
-
-$showCredentials = false;
-$tempLogin = '';
-$tempPassword = '';
 
 // Подключение к БД
 $db = new PDO("mysql:host=localhost;dbname=u82388;charset=utf8", 'u82388', '5768002', [
