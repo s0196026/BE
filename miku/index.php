@@ -307,9 +307,8 @@ color: #E12885;">
         <div class="ms-md-5 contw">
             <h3 id="form" class="DGO mt-4 mt-md-0">поделитесь мнением!</h3>
             
-            <?php if (isset($_COOKIE['success'])): ?>
+            <?php if ($showSuccess): ?>
                 <div class="CI" style="color: #E12885; margin-bottom: 15px;">Данные успешно сохранены!</div>
-                <?php setcookie('success', '', time() - 3600, '/'); ?>
             <?php endif; ?>
             
             <form class="CI form_border contw" id="comment" method="POST" action="index.php">
