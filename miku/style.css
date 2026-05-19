@@ -122,11 +122,12 @@ footer form{
     align-items: center;
 }
 footer input {
-    width: 100%;
+    width: 80%;
     box-sizing: border-box;
 }
 footer .contw{
     display: flex;
+    width: 90%;
     flex-direction: column;
     justify-content: space-between;
     justify-content: center;
