@@ -105,7 +105,7 @@
     color: #47DFD3;
     font-size: 25px;
 }
-footer{
+/*footer{
     margin-top: 50px;
     background-color: #7ACBDC;
     height: 100vh;
@@ -131,6 +131,63 @@ footer .contw{
     justify-content: space-between;
     justify-content: center;
     align-items: center;
+}*/
+footer form input[type="text"],
+footer form input[type="tel"],
+footer form input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+footer form label {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+/* Для чекбокса отдельные стили */
+footer form input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+footer .contw {
+    display: flex;
+    width: 90%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+footer form {
+    width: 80%;
+    color: #373B3E;
+    font-size: 15pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Стили для placeholder по центру */
+footer form input::placeholder {
+    text-align: center;
+}
+
+/* Дополнительные стили для улучшения внешнего вида */
+footer form input:not([type="checkbox"]) {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14pt;
+}
+
+footer form label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
 }
 .button{
     width: 80%;
