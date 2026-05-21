@@ -170,8 +170,8 @@ footer form input::placeholder {
 
 footer form input[type="checkbox"] {
     width: auto;
-    margin-right: 10px;
     margin: 0px;
+    margin-right: 10px;
 }
 
 /* Дополнительные стили для улучшения внешнего вида */
