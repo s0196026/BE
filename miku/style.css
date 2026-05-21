@@ -122,8 +122,7 @@ footer form{
     align-items: center;
 }
 footer label {
-    width: 80%;
-    box-sizing: border-box;
+    width: 100%;
 }
 footer .contw{
     display: flex;
@@ -132,7 +131,6 @@ footer .contw{
     justify-content: space-between;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box;
 }
 .button{
     width: 80%;
