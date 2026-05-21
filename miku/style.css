@@ -168,6 +168,11 @@ footer form input::placeholder {
     text-align: center;
 }
 
+footer form input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
 /* Дополнительные стили для улучшения внешнего вида */
 footer form input:not([type="checkbox"]) {
     border: 1px solid #ccc;
