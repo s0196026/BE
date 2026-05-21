@@ -146,12 +146,6 @@ footer form label {
     text-align: center;
 }
 
-/* Для чекбокса отдельные стили */
-footer form input[type="checkbox"] {
-    width: auto;
-    margin-right: 10px;
-}
-
 footer .contw {
     display: flex;
     width: 90%;
