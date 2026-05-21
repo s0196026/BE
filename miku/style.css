@@ -121,7 +121,7 @@ footer form{
     justify-content: center;
     align-items: center;
 }
-footer input {
+footer label {
     width: 80%;
     box-sizing: border-box;
 }
