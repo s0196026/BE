@@ -132,6 +132,7 @@ footer .contw{
     justify-content: space-between;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
 }
 .button{
     width: 80%;
