@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
-    /*
+    */
     // Если ошибок нет - сохраняем в БД
     if (empty($errors) && isset($_SESSION['user_id'])) {
         // Очищаем старые ошибки
