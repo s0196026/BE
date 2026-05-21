@@ -74,39 +74,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie("error_$key", $msg, time() + 3600, '/');
     }
 
-    // ошибок нет - сохраняем в БД
-    try {
-        $db->beginTransaction();
+    // Если ошибок нет и пользователь авторизован - сохраняем в БД
+    if (empty($errors) && isset($_SESSION['user_id'])) {
+        try {
+            $db->beginTransaction();
 
-        // обновление основной информации
-        $stmt = $db->prepare("UPDATE appmiku SET
-            fio = ?, phone = ?, email = ?, com = ?, contract_agreed = ?
-            WHERE id = ?");
+            // обновление основной информации
+            $stmt = $db->prepare("UPDATE appmiku SET
+                fio = ?, phone = ?, email = ?, com = ?, contract_agreed = ?
+                WHERE id = ?");
 
-        $stmt->execute([
-            $_POST['fio'],
-            $_POST['phone'],
-            $_POST['email'],
-            $_POST['com'],
-            isset($_POST['contract']) ? 1 : 0,
-            $_SESSION['user_id']
-        ]);
+            $stmt->execute([
+                $fio,
+                $phone,
+                $email,
+                $com,
+                $contract,
+                $_SESSION['user_id']
+            ]);
 
-        $db->commit();
+            $db->commit();
 
-        // очистка куков после успешного сохранения
-        foreach ($_COOKIE as $name => $value) {
-            if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
-                setcookie($name, '', time() - 3600, '/');
+            // очистка куков после успешного сохранения
+            foreach ($_COOKIE as $name => $value) {
+                if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
+                    setcookie($name, '', time() - 3600, '/');
+                }
             }
+
+            header('Location: index.php?success=1');
+            exit();
+
+        } catch (PDOException $e) {
+            $db->rollBack();
+            setcookie('error_db', 'Ошибка сохранения: '.$e->getMessage(), time() + 3600, '/');
+            header('Location: index.php#form');
+            exit();
         }
-
-        header('Location: index.php?success=1');
-        exit();
-
-    } catch (PDOException $e) {
-        $db->rollBack();
-        setErrorCookie('db', 'Ошибка сохранения: '.$e->getMessage());
+    }
+    
+    // Если есть ошибки - редиректим обратно к форме
+    if (!empty($errors)) {
         header('Location: index.php#form');
         exit();
     }
