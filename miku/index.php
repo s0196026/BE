@@ -383,7 +383,7 @@ color: #E12885;">
                 <?php endif; ?>
                 <br/>
                 
-                <button class="DGO button" type="submit">Сохранить данные</button>
+                <button class="DGO button" type="submit">Отправить!</button>
             </form>
         </div>
     </footer>
