@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } catch (PDOException $e) {
         $db->rollBack();
         setErrorCookie('db', 'Ошибка сохранения: '.$e->getMessage());
-        header('Location: index.php');
+        header('Location: index.php#form');
         exit();
     }
 }
@@ -131,12 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie('success', '1', time() + 3600, '/');
         header('Location: index.php#form');
         exit();
-    }
+    }/*
     
-    header('Location: index.php#form');
-    exit();
-    */
-}
 $showSuccess = false;
 if (isset($_COOKIE['success'])) {
     $showSuccess = true;
