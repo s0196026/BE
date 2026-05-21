@@ -73,7 +73,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($errors as $key => $msg) {
         setcookie("error_$key", $msg, time() + 3600, '/');
     }
-    
+
+    // ошибок нет - сохраняем в БД
+    try {
+        $db->beginTransaction();
+
+        // обновление основной информации
+        $stmt = $db->prepare("UPDATE appmiku SET
+            fio = ?, phone = ?, email = ?, com = ?, contract_agreed = ?
+            WHERE id = ?");
+
+        $stmt->execute([
+            $_POST['fio'],
+            $_POST['phone'],
+            $_POST['email'],
+            $_POST['com'],
+            isset($_POST['contract']) ? 1 : 0,
+            $_SESSION['user_id']
+        ]);
+
+        $db->commit();
+
+        // очистка куков после успешного сохранения
+        foreach ($_COOKIE as $name => $value) {
+            if (strpos($name, 'form_') === 0 || strpos($name, 'error_') === 0) {
+                setcookie($name, '', time() - 3600, '/');
+            }
+        }
+
+        header('Location: index.php?success=1');
+        exit();
+
+    } catch (PDOException $e) {
+        $db->rollBack();
+        setErrorCookie('db', 'Ошибка сохранения: '.$e->getMessage());
+        header('Location: index.php');
+        exit();
+    }
+}
+    /*
     // Если ошибок нет - сохраняем в БД
     if (empty($errors) && isset($_SESSION['user_id'])) {
         // Очищаем старые ошибки
@@ -97,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     header('Location: index.php#form');
     exit();
+    */
 }
 $showSuccess = false;
 if (isset($_COOKIE['success'])) {
