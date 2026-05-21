@@ -132,9 +132,7 @@ footer .contw{
     justify-content: center;
     align-items: center;
 }*/
-footer form input[type="text"],
-footer form input[type="tel"],
-footer form input[type="email"] {
+footer form input{
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
