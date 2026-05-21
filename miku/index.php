@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
-    */
+    /*
     // Если ошибок нет - сохраняем в БД
     if (empty($errors) && isset($_SESSION['user_id'])) {
         // Очищаем старые ошибки
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie('success', '1', time() + 3600, '/');
         header('Location: index.php#form');
         exit();
-    }/*
+    }*/
     
 $showSuccess = false;
 if (isset($_COOKIE['success'])) {
